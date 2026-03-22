@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RISEFARM - Pelopor Agritech Ubi Nusantara</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .fade-in-up { opacity: 0; transform: translateY(40px); transition: all 1s ease-out; }
+        .fade-in-left { opacity: 0; transform: translateX(-40px); transition: all 1s ease-out; }
+        .fade-in-right { opacity: 0; transform: translateX(40px); transition: all 1s ease-out; }
+        .is-visible { opacity: 1; transform: translate(0, 0); }
+
+        nav.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        nav.scrolled #logo-icon { color: #047857; }
+        nav.scrolled #logo-text { color: #064e3b; }
+        nav.scrolled .nav-link { color: #4A3B32; }
+        nav.scrolled #btn-menu { color: #4A3B32; }
+
+        nav.scrolled .lang-btn {
+            color: #4A3B32;
+            border-color: rgba(74, 59, 50, 0.2);
+        }
+
+        nav.scrolled .lang-btn:hover {
+            background-color: rgba(4, 120, 87, 0.08);
+            color: #ea580c;
+            border-color: rgba(234, 88, 12, 0.4);
+        }
+
+        nav.scrolled .lang-btn.active {
+            background-color: rgba(4, 120, 87, 0.12);
+            color: #ea580c;
+            border-color: rgba(234, 88, 12, 0.45);
+        }
+
+        .page-hidden { display: none; }
+        .prose-article p { margin-bottom: 1rem; line-height: 1.9; }
+        .prose-article h2 { font-size: 1.5rem; font-weight: 700; color: #052e16; margin-top: 2rem; margin-bottom: 1rem; }
+        .prose-article ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="font-sans text-[#4A3B32] bg-[#FDFBF7] selection:bg-orange-200 selection:text-orange-900 overflow-x-hidden">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-5">
+        <div class="container mx-auto px-6 md:px-12 flex justify-between items-center">
+            <a href="#home" class="flex items-center gap-2 nav-home-link">
+                <i data-lucide="leaf" id="logo-icon" class="w-8 h-8 text-emerald-500 transition-colors"></i>
+                <span id="logo-text" class="text-2xl font-bold tracking-tighter text-white transition-colors">
+                    RISE<span class="text-orange-500">FARM</span>
+                </span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#about" class="nav-link font-medium transition-colors hover:text-orange-500 text-white/90" data-i18n="nav.about">Tentang Kami</a>
+                <a href="#products" class="nav-link font-medium transition-colors hover:text-orange-500 text-white/90" data-i18n="nav.products">Produk</a>
+                <a href="#process" class="nav-link font-medium transition-colors hover:text-orange-500 text-white/90" data-i18n="nav.process">Proses</a>
+                <a href="#gallery" class="nav-link font-medium transition-colors hover:text-orange-500 text-white/90" data-i18n="nav.gallery">Galeri</a>
+                <a href="#articles" class="nav-link font-medium transition-colors hover:text-orange-500 text-white/90" data-i18n="nav.articles">Artikel</a>
+                <a href="#contact" class="nav-link font-medium transition-colors hover:text-orange-500 text-white/90" data-i18n="nav.contact">Kontak</a>
+
+                <div class="flex items-center gap-2 ml-4">
+                    <button id="lang-id" onclick="setLanguage('id')" class="lang-btn px-3 py-1 rounded-full border border-white/30 text-white text-sm transition-all duration-300 hover:bg-white/10 hover:text-orange-300 hover:border-orange-300">
+                        ID
+                    </button>
+                    <button id="lang-en" onclick="setLanguage('en')" class="lang-btn px-3 py-1 rounded-full border border-white/30 text-white text-sm transition-all duration-300 hover:bg-white/10 hover:text-orange-300 hover:border-orange-300">
+                        EN
+                    </button>
+                </div>
+
+                <a href="#editor" class="text-emerald-200 font-bold flex items-center gap-2 hover:text-orange-300 transition-colors">
+                    <span data-i18n="nav.write">Tulis Artikel</span>
+                    <i data-lucide="square-pen" class="w-4 h-4"></i>
+                </a>
+
+                <button id="admin-auth-btn" class="px-4 py-2 rounded-full border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition-all">
+                    Admin Login
+                </button>
+
+                
+            </div>
+
+            <button id="btn-menu" class="md:hidden text-white transition-colors">
+                <i data-lucide="menu" id="icon-menu" class="w-7 h-7"></i>
+                <i data-lucide="x" id="icon-close" class="w-7 h-7 hidden"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="absolute top-full left-0 w-full bg-white shadow-xl flex-col items-center py-6 gap-4 hidden md:hidden">
+            <a href="#about" class="text-[#4A3B32] font-medium text-lg w-full text-center py-2 hover:text-orange-500 mobile-link" data-i18n="nav.about">Tentang Kami</a>
+            <a href="#products" class="text-[#4A3B32] font-medium text-lg w-full text-center py-2 hover:text-orange-500 mobile-link" data-i18n="nav.products">Produk</a>
+            <a href="#process" class="text-[#4A3B32] font-medium text-lg w-full text-center py-2 hover:text-orange-500 mobile-link" data-i18n="nav.process">Proses</a>
+            <a href="#gallery" class="text-[#4A3B32] font-medium text-lg w-full text-center py-2 hover:text-orange-500 mobile-link" data-i18n="nav.gallery">Galeri</a>
+            <a href="#articles" class="text-[#4A3B32] font-medium text-lg w-full text-center py-2 hover:text-orange-500 mobile-link" data-i18n="nav.articles">Artikel</a>
+            <a href="#contact" class="text-[#4A3B32] font-medium text-lg w-full text-center py-2 hover:text-orange-500 mobile-link" data-i18n="nav.contact">Kontak</a>
+            <a href="#editor" class="text-[#4A3B32] font-medium text-lg w-full text-center py-2 hover:text-orange-500 mobile-link" data-i18n="nav.write">Tulis Artikel</a>
+            <button id="admin-auth-btn-mobile" class="px-4 py-2 rounded-full border border-stone-300 text-[#4A3B32] text-sm transition-all duration-300 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-300">
+                Admin Login
+            </button>
+            
+
+            <div class="flex items-center gap-2 mt-2">
+                <button id="lang-id-mobile" onclick="setLanguage('id')" class="lang-btn-mobile px-4 py-2 rounded-full border border-stone-300 text-[#4A3B32] text-sm transition-all duration-300 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-300">
+                    ID
+                </button>
+                <button id="lang-en-mobile" onclick="setLanguage('en')" class="lang-btn-mobile px-4 py-2 rounded-full border border-stone-300 text-[#4A3B32] text-sm transition-all duration-300 hover:bg-orange-50 hover:text-orange-500 hover:border-orange-300">
+                    EN
+                </button>
+            </div>
+
+            <a href="#contact" class="mt-4 px-8 py-3 bg-emerald-700 text-white rounded-full font-semibold mobile-link" data-i18n="nav.contactBtn">
+                Hubungi Kami
+            </a>
+        </div>
+    </nav>
+
+    <main id="home-page">
+        <section id="home" class="relative min-h-screen flex items-center pt-20">
+            <div class="absolute inset-0 z-0">
+                <img src="cuciubi_pak_rama.jpeg" alt="Perkebunan Ubi" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/70 to-transparent"></div>
+            </div>
+
+            <div class="container mx-auto px-6 md:px-12 relative z-10">
+                <div class="max-w-3xl">
+                    <div class="fade-in-up" style="transition-delay: 100ms;">
+                        <span class="inline-block py-1 px-3 rounded-full bg-orange-500/20 text-orange-300 font-semibold text-sm mb-6 border border-orange-500/30 backdrop-blur-sm" data-i18n="hero.badge">
+                            Penyedia ubi berkualitas
+                        </span>
+                    </div>
+                    <div class="fade-in-up" style="transition-delay: 200ms;">
+                        <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight mb-6" data-i18n="hero.title">
+                            Pasokan Ubi yang Stabil, Terukur, dan Siap untuk Skala Bisnis.
+                        </h1>
+                    </div>
+                    <div class="fade-in-up" style="transition-delay: 300ms;">
+                        <p class="text-lg md:text-2xl text-stone-200 mb-10 max-w-2xl leading-relaxed" data-i18n="hero.desc">
+                            Dari bibit unggul hingga ke tangan Anda. RISEFARM menghadirkan inovasi pertanian ubi yang berkelanjutan, memberdayakan petani lokal, dan menghasilkan panen kualitas premium untuk kebutuhan supermarket & ekspor.
+                        </p>
+                    </div>
+                    <div class="fade-in-up flex flex-wrap gap-4" style="transition-delay: 400ms;">
+                        <a href="#products" class="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-orange-500/30 flex items-center gap-2 group">
+                            <span data-i18n="hero.cta1">Lihat Produk Kami</span>
+                            <i data-lucide="chevron-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <a href="#articles" class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md rounded-full font-bold text-lg transition-all border border-white/30" data-i18n="hero.ctaArticles">
+                            Baca Artikel & Berita
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-24 bg-[#FDFBF7]">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                    <div class="fade-in-right relative">
+                        <div class="aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative">
+                            <img src="ubiferry.jpeg" alt="Petani RISEFARM memegang tanah" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                            <div class="absolute inset-0 bg-emerald-900/10 hover:bg-transparent transition-colors duration-500"></div>
+                        </div>
+
+                        <div class="absolute -bottom-8 -right-8 bg-white p-6 rounded-2xl shadow-xl hidden md:block border border-emerald-50">
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <i data-lucide="leaf" class="w-8 h-8 text-purple-700"></i>
+                                </div>
+                                <div>
+                                    <p class="text-3xl font-bold text-emerald-900">100%</p>
+                                    <p class="text-stone-500 font-medium" data-i18n="about.badge">Alami & Berkelanjutan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-left" style="transition-delay: 200ms;">
+                        <div>
+                            <h3 class="text-orange-600 font-bold uppercase tracking-wider mb-2" data-i18n="about.kicker">Tentang RISEFARM</h3>
+                            <h2 class="text-4xl md:text-5xl font-bold text-emerald-950 mb-6 leading-tight" data-i18n="about.title">
+                                Akar Kuat untuk <br/>Pertanian Modern
+                            </h2>
+                            <p class="text-lg text-stone-600 mb-6 leading-relaxed" data-i18n="about.desc1">
+                                RISEFARM bukan sekadar lahan pertanian. Kami adalah ekosistem agritech yang berdedikasi untuk merevolusi budidaya ubi di Nusantara. Berdiri dengan visi untuk menciptakan ketahanan pangan yang berkelanjutan dan menyejahterakan petani lokal.
+                            </p>
+                            <p class="text-lg text-stone-600 mb-8 leading-relaxed" data-i18n="about.desc2">
+                                Kami memadukan kearifan lokal dengan teknologi presisi—mulai dari seleksi bibit, pemantauan tanah, hingga distribusi cerdas, memastikan setiap ubi yang sampai ke tangan Anda memiliki kualitas nutrisi dan rasa terbaik.
+                            </p>
+
+                            <div class="grid grid-cols-2 gap-6 mb-8">
+                                <div class="flex flex-col">
+                                    <span class="text-4xl font-bold text-emerald-700 mb-1">112+</span>
+                                    <span class="text-stone-500 font-medium" data-i18n="about.land">Hektar Lahan Aktif</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-4xl font-bold text-purple-700 mb-1">45+</span>
+                                    <span class="text-stone-500 font-medium" data-i18n="about.farmers">Mitra Petani</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 bg-emerald-900 text-white">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6" data-i18n="why.title">Mengapa Memilih RISEFARM?</h2>
+                    <p class="text-emerald-100 text-lg" data-i18n="why.desc">Komitmen kami pada kualitas, lingkungan, dan komunitas membedakan kami di setiap langkah rantai pasok.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="fade-in-up"><div class="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full"><div class="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-orange-400"><i data-lucide="shield-check" class="w-7 h-7"></i></div><h3 class="text-xl font-bold mb-3" data-i18n="why.q1">Kualitas Premium</h3><p class="text-emerald-100/80 leading-relaxed" data-i18n="why.q1d">Sistem kontrol kualitas ketat memastikan ubi segar, manis, dan kaya nutrisi.</p></div></div>
+                    <div class="fade-in-up"><div class="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full"><div class="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-emerald-400"><i data-lucide="sprout" class="w-7 h-7"></i></div><h3 class="text-xl font-bold mb-3" data-i18n="why.q2">Ramah Lingkungan</h3><p class="text-emerald-100/80 leading-relaxed" data-i18n="why.q2d">Metode pertanian regeneratif yang menjaga kesuburan tanah untuk generasi mendatang.</p></div></div>
+                    <div class="fade-in-up"><div class="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full"><div class="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-purple-400"><i data-lucide="tractor" class="w-7 h-7"></i></div><h3 class="text-xl font-bold mb-3" data-i18n="why.q3">Agritech Modern</h3><p class="text-emerald-100/80 leading-relaxed" data-i18n="why.q3d">Pupuk racikan berbasis kebutuhan tanah, dan bibit unggul hasil kultur jaringan untuk menciptakan sistem pertanian yang lebih efisien, produktif, dan menghasilkan panen berkualitas tinggi secara konsisten.</p></div></div>
+                    <div class="fade-in-up"><div class="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full"><div class="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-blue-400"><i data-lucide="users" class="w-7 h-7"></i></div><h3 class="text-xl font-bold mb-3" data-i18n="why.q4">Pemberdayaan Lokal</h3><p class="text-emerald-100/80 leading-relaxed" data-i18n="why.q4d">Bermitra dengan puluhan petani desa, memberikan pelatihan dan pembagian hasil yang adil.</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="py-24 bg-[#FDFBF7]">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
+                    <h3 class="text-orange-600 font-bold uppercase tracking-wider mb-2" data-i18n="products.kicker">Hasil Bumi Terbaik</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold text-emerald-950 mb-6" data-i18n="products.title">Produk & Layanan Kami</h2>
+                    <p class="text-stone-600 text-lg" data-i18n="products.desc">Dari ubi madu yang manis legit hingga varietas ungu yang kaya antioksidan, kami menyediakan yang terbaik untuk Anda.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="fade-in-up"><div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 group"><div class="h-64 overflow-hidden relative"><div class="absolute top-4 right-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10" data-i18n="products.badge1">Unggulan</div><img src="cilembu.png" alt="Ubi Segar Kualitas Ekspor" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /></div><div class="p-8"><h3 class="text-2xl font-bold text-emerald-950 mb-3" data-i18n="products.p1">Ubi Segar Kualitas Ekspor</h3><p class="text-stone-600 mb-6" data-i18n="products.p1d">Pilihan ubi premium lengkap seperti Cilembu, ungu, Jepang, Murasaki, Pinky, TW, dan lainnya. Seluruh produk melalui proses sortir ketat dengan kualitas terjamin serta bebas dari pestisida kimia berbahaya, sehingga lebih sehat dan siap bersaing di pasar modern.</p><a href="https://wa.me/6281281091257?text=Halo%20Risefarm,%20saya%20tertarik%20dengan%20ubi%20segar%20spek%20ekspor" target="_blank" class="text-emerald-700 font-bold flex items-center gap-2 hover:text-orange-600 transition-colors"><span data-i18n="products.detail">Pelajari Detail</span><i data-lucide="chevron-right" class="w-4 h-4"></i></a></div></div></div>
+                    <div class="fade-in-up"><div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 group"><div class="h-64 overflow-hidden relative"><div class="absolute top-4 right-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">B2B</div><img src="pengkelompokanubi.jpeg" alt="Ubi Segar Kualitas Supermarket" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /></div><div class="p-8"><h3 class="text-2xl font-bold text-emerald-950 mb-3" data-i18n="products.p2">Ubi Segar Kualitas Supermarket</h3><p class="text-stone-600 mb-6" data-i18n="products.p2d">Kami menyediakan ubi segar berkualitas tinggi yang siap untuk distribusi ke supermarket dan toko ritel.</p><a href="https://wa.me/6281281091257?text=Halo%20Risefarm,%20saya%20tertarik%20dengan%20ubi%20segar%20spek%20supermarket" target="_blank" class="text-emerald-700 font-bold flex items-center gap-2 hover:text-orange-600 transition-colors"><span data-i18n="products.detail">Pelajari Detail</span><i data-lucide="chevron-right" class="w-4 h-4"></i></a></div></div></div>
+                    <div class="fade-in-up"><div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 group"><div class="h-64 overflow-hidden relative"><div class="absolute top-4 right-4 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10" data-i18n="products.badge3">Baru</div><img src="https://images.unsplash.com/photo-1615486171448-4afd28d488f2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sayuran dan buah buahan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /></div><div class="p-8"><h3 class="text-2xl font-bold text-emerald-950 mb-3" data-i18n="products.p3">Sayuran dan buah buahan</h3><p class="text-stone-600 mb-6" data-i18n="products.p3d">Sayuran dan buah buahan segar yang tumbuh dengan metode pertanian organik kami menyediakan kualitas ekspor dan kualitas supermarket (melon, jeruk, wortel, bayam dll).</p><a href="https://wa.me/6281281091257?text=Halo%20Risefarm,%20saya%20tertarik%20dengan%20sayuran%20dan%20buah-buahan" target="_blank" class="text-emerald-700 font-bold flex items-center gap-2 hover:text-orange-600 transition-colors"><span data-i18n="products.detail">Pelajari Detail</span><i data-lucide="chevron-right" class="w-4 h-4"></i></a></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process" class="py-24 bg-stone-100 relative overflow-hidden">
+            <div class="container mx-auto px-6 md:px-12 relative z-10">
+                <div class="text-center max-w-3xl mx-auto mb-20 fade-in-up">
+                    <h3 class="text-orange-600 font-bold uppercase tracking-wider mb-2" data-i18n="process.kicker">Perjalanan Kualitas</h3>
+                    <h2 class="text-4xl md:text-5xl font-bold text-emerald-950 mb-6" data-i18n="process.title">Dari Kebun Ke Meja Anda</h2>
+                    <p class="text-stone-600 text-lg" data-i18n="process.desc">Setiap tahap dipantau secara presisi untuk menjamin kualitas terbaik.</p>
+                </div>
+                <div class="grid md:grid-cols-4 gap-12 md:gap-6 relative z-10">
+                    <div class="fade-in-up"><div class="flex flex-col items-center text-center group"><div class="w-24 h-24 bg-white rounded-full shadow-xl border-4 border-emerald-500 flex items-center justify-center mb-6"><i data-lucide="sprout" class="w-10 h-10 text-emerald-700"></i></div><h4 class="text-xl font-bold text-emerald-950 mb-3" data-i18n="process.s1">1. Pembibitan</h4><p class="text-stone-600 px-4" data-i18n="process.s1d">Seleksi varietas unggul di fasilitas nursery khusus kami.</p></div></div>
+                    <div class="fade-in-up"><div class="flex flex-col items-center text-center group"><div class="w-24 h-24 bg-white rounded-full shadow-xl border-4 border-emerald-500 flex items-center justify-center mb-6"><i data-lucide="sun" class="w-10 h-10 text-emerald-700"></i></div><h4 class="text-xl font-bold text-emerald-950 mb-3" data-i18n="process.s2">2. Penanaman</h4><p class="text-stone-600 px-4" data-i18n="process.s2d">Perawatan intensif dengan pemupukan organik dan irigasi presisi.</p></div></div>
+                    <div class="fade-in-up"><div class="flex flex-col items-center text-center group"><div class="w-24 h-24 bg-white rounded-full shadow-xl border-4 border-emerald-500 flex items-center justify-center mb-6"><i data-lucide="package-check" class="w-10 h-10 text-emerald-700"></i></div><h4 class="text-xl font-bold text-emerald-950 mb-3" data-i18n="process.s3">3. Panen & Sortir</h4><p class="text-stone-600 px-4" data-i18n="process.s3d">Dipanen pada usia optimal, disortir ketat berdasarkan standar mutu.</p></div></div>
+                    <div class="fade-in-up"><div class="flex flex-col items-center text-center group"><div class="w-24 h-24 bg-white rounded-full shadow-xl border-4 border-emerald-500 flex items-center justify-center mb-6"><i data-lucide="truck" class="w-10 h-10 text-emerald-700"></i></div><h4 class="text-xl font-bold text-emerald-950 mb-3" data-i18n="process.s4">4. Distribusi</h4><p class="text-stone-600 px-4" data-i18n="process.s4d">Pengemasan aman dan logistik cepat agar kesegaran tetap terjaga.</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="py-24 bg-[#FDFBF7]">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="fade-in-up flex flex-col md:flex-row justify-between items-end mb-12">
+                    <div class="max-w-2xl">
+                        <h3 class="text-orange-600 font-bold uppercase tracking-wider mb-2" data-i18n="gallery.kicker">Dokumentasi</h3>
+                        <h2 class="text-4xl font-bold text-emerald-950" data-i18n="gallery.title">Melihat Lebih Dekat RISEFARM</h2>
+                    </div>
+                    <button class="mt-6 md:mt-0 text-emerald-700 font-bold flex items-center gap-2 hover:text-orange-600 transition-colors">
+                        <span data-i18n="gallery.all">Lihat Semua</span>
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                    <div class="fade-in-up col-span-2 row-span-2"><div class="h-64 md:h-[500px] rounded-3xl overflow-hidden group relative"><img src="pengecekan_berulang_pak_budi.jpeg" alt="Petani di ladang" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /><div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8"><p class="text-white font-bold text-xl" data-i18n="gallery.caption1">Pemberdayaan Petani Lokal</p></div></div></div>
+                    <div class="fade-in-up"><div class="h-48 md:h-[238px] rounded-3xl overflow-hidden group relative"><img src="pickup_ubi.jpeg" alt="Tanah pertanian" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /></div></div>
+                    <div class="fade-in-up"><div class="h-48 md:h-[238px] rounded-3xl overflow-hidden group relative"><img src="ubiakbar.jpeg" alt="Produk ubi" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /></div></div>
+                    <div class="fade-in-up col-span-2 md:col-span-2"><div class="h-48 md:h-[238px] rounded-3xl overflow-hidden group relative"><img src="penyucian_tahap_awal.jpeg" alt="Hasil Panen" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="articles" class="py-24 bg-stone-100">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 fade-in-up">
+                    <div class="max-w-2xl">
+                        <h3 class="text-orange-600 font-bold uppercase tracking-wider mb-2" data-i18n="articles.kicker">Update RISEFARM</h3>
+                        <h2 class="text-4xl md:text-5xl font-bold text-emerald-950 mb-4" data-i18n="articles.title">Artikel & Berita Terbaru</h2>
+                        <p class="text-stone-600 text-lg" data-i18n="articles.desc">Bagikan cerita panen, inovasi pertanian, aktivitas kebun, dan kabar terbaru perusahaan dalam satu halaman yang rapi.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="#news" class="px-6 py-3 rounded-full border border-emerald-700 text-emerald-800 font-semibold hover:bg-emerald-50" data-i18n="articles.viewAll">Lihat Semua Artikel</a>
+                        <a href="#editor" class="px-6 py-3 rounded-full bg-orange-500 text-white font-semibold hover:bg-orange-600" data-i18n="articles.write">Tulis Sekarang</a>
+                    </div>
+                </div>
+
+                <div id="featured-article" class="mb-10"></div>
+                <div id="articles-grid" class="grid md:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+
+        <section class="py-24 bg-emerald-50">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
+                    <h2 class="text-4xl md:text-5xl font-bold text-emerald-950 mb-6" data-i18n="testimonials.title">Suara Mitra Kami</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div class="fade-in-up"><div class="bg-white p-10 rounded-3xl shadow-sm border border-emerald-100 relative h-full"><div class="text-6xl text-orange-200 absolute top-6 right-8 font-serif">"</div><p class="text-stone-600 text-lg italic mb-8 relative z-10 leading-relaxed" data-i18n="testimonials.t1">"Sejak bermitra dengan RISEFARM, hasil panen lahan saya meningkat secara signifikan. Edukasi pertanian organik yang diberikan sangat mengubah pola pikir kami sebagai petani di desa."</p><div class="flex items-center gap-4"><div class="w-14 h-14 bg-emerald-200 rounded-full overflow-hidden"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Bapak Sugeng" class="w-full h-full object-cover"/></div><div><h4 class="font-bold text-emerald-950" data-i18n="testimonials.t1n">Bapak Sugeng</h4><p class="text-stone-500 text-sm" data-i18n="testimonials.t1r">Ketua Kelompok Tani, Jawa Barat</p></div></div></div></div>
+                    <div class="fade-in-up"><div class="bg-white p-10 rounded-3xl shadow-sm border border-emerald-100 relative h-full"><div class="text-6xl text-purple-200 absolute top-6 right-8 font-serif">"</div><p class="text-stone-600 text-lg italic mb-8 relative z-10 leading-relaxed" data-i18n="testimonials.t2">"Kualitas pasokan ubi madu dari RISEFARM selalu konsisten. Hal ini sangat penting bagi industri pengolahan makanan kami. Pengiriman selalu tepat waktu dan ukurannya presisi."</p><div class="flex items-center gap-4"><div class="w-14 h-14 bg-purple-200 rounded-full overflow-hidden"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Ibu Diana" class="w-full h-full object-cover"/></div><div><h4 class="font-bold text-emerald-950" data-i18n="testimonials.t2n">Ibu Diana</h4><p class="text-stone-500 text-sm" data-i18n="testimonials.t2r">Direktur Pengadaan, PT Nutrisi Maju</p></div></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 relative overflow-hidden">
+            <div class="absolute inset-0 bg-emerald-900"></div>
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+            <div class="container mx-auto px-6 md:px-12 relative z-10 text-center fade-in-up">
+                <h2 class="text-4xl md:text-6xl font-bold text-white mb-6" data-i18n="cta.title">Mari Tumbuh Bersama <span class="text-orange-400">RISEFARM</span></h2>
+                <p class="text-xl text-emerald-100 mb-10 max-w-2xl mx-auto" data-i18n="cta.desc">Apakah Anda petani yang ingin berkembang, atau perusahaan yang membutuhkan pasokan ubi premium berkelanjutan? Kami siap menjadi mitra terbaik Anda.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="https://wa.me/6281281091257?text=Halo%20saya%20tertarik%20menjadi%20mitra.%20Boleh%20minta%20info%20lebih%20lanjut?" target="_blank" class="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-full font-bold text-lg transition-all shadow-xl hover:-translate-y-1 text-center" data-i18n="cta.btn1">Jadilah Mitra Kami</a>
+                    <a href="https://wa.me/6281281091257?text=Halo%20saya%20ingin%20memesan%20produk.%20Mohon%20info%20katalog%20dan%20harga." target="_blank" class="px-8 py-4 bg-white hover:bg-emerald-50 text-emerald-900 rounded-full font-bold text-lg transition-all shadow-xl hover:-translate-y-1 text-center" data-i18n="cta.btn2">Pesan Produk</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="news-page" class="page-hidden pt-28 min-h-screen bg-[#FDFBF7]">
+        <section class="pb-20">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="max-w-3xl mb-10">
+                    <p class="text-orange-600 font-bold uppercase tracking-wider mb-3">Newsroom</p>
+                    <h1 class="text-4xl md:text-6xl font-bold text-emerald-950 mb-4">Artikel & Berita RISEFARM</h1>
+                    <p class="text-lg text-stone-600">Semua artikel yang sudah dipublikasikan akan tampil di sini. Konten dapat ditulis dari halaman editor dan tersimpan otomatis di browser melalui localStorage.</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-4 md:items-center md:justify-between mb-10">
+                    <div class="relative w-full md:max-w-md">
+                        <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
+                        <input id="search-articles" type="text" placeholder="Cari artikel atau kategori..." class="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-200 bg-white outline-none focus:border-emerald-500" />
+                    </div>
+                    <div class="flex gap-3">
+                        <select id="filter-status" class="px-4 py-4 rounded-2xl border border-stone-200 bg-white outline-none focus:border-emerald-500">
+                            <option value="published">Published</option>
+                            <option value="all">Semua</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                        <a href="#editor" class="px-6 py-4 rounded-2xl bg-emerald-700 text-white font-semibold hover:bg-emerald-800">+ Tulis Artikel</a>
+                    </div>
+                </div>
+
+                <div id="news-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+    </main>
+
+    <main id="article-detail-page" class="page-hidden pt-28 min-h-screen bg-[#FDFBF7]">
+        <section class="pb-20">
+            <div class="container mx-auto px-6 md:px-12">
+                <a href="#news" class="inline-flex items-center gap-2 text-emerald-700 font-semibold hover:text-orange-600 mb-8">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Kembali ke daftar artikel
+                </a>
+                <div id="article-detail-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <main id="editor-page" class="page-hidden pt-28 min-h-screen bg-stone-100">
+        <section class="pb-20">
+            <div class="container mx-auto px-6 md:px-12">
+                <div class="grid lg:grid-cols-12 gap-8">
+                    <div class="lg:col-span-8">
+                        <div class="bg-white rounded-3xl shadow-sm border border-stone-200 p-6 md:p-8">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                                <div>
+                                    <p class="text-orange-600 font-bold uppercase tracking-wider mb-2">Editor</p>
+                                    <h1 class="text-3xl md:text-4xl font-bold text-emerald-950">Tulis Artikel / Berita</h1>
+                                </div>
+                                <div class="flex flex-wrap gap-3">
+                                    <button id="new-article-btn" class="px-5 py-3 rounded-2xl border border-stone-300 font-semibold hover:bg-stone-50">Artikel Baru</button>
+                                    <button id="save-draft-btn" class="px-5 py-3 rounded-2xl bg-stone-900 text-white font-semibold hover:bg-stone-800">Simpan Draft</button>
+                                    <button id="publish-btn" class="px-5 py-3 rounded-2xl bg-orange-500 text-white font-semibold hover:bg-orange-600">Publish</button>
+                                </div>
+                                <p id="admin-status-text" class="text-sm text-stone-500 md:text-right">Mode publik aktif. Login admin untuk publish/hapus artikel.</p>
+                            </div>
+
+                            <form id="article-form" class="space-y-6">
+                                <input type="hidden" id="article-id" />
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">Judul Artikel</label>
+                                        <input id="article-title" type="text" class="w-full px-4 py-4 rounded-2xl border border-stone-200 outline-none focus:border-emerald-500" placeholder="Contoh: Panen Ubi Cilembu Meningkat 25% di Musim Ini" required />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">Kategori</label>
+                                        <input id="article-category" type="text" class="w-full px-4 py-4 rounded-2xl border border-stone-200 outline-none focus:border-emerald-500" placeholder="Berita, Edukasi, Panen, Kemitraan" />
+                                    </div>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">Penulis</label>
+                                        <input id="article-author" type="text" class="w-full px-4 py-4 rounded-2xl border border-stone-200 outline-none focus:border-emerald-500" placeholder="Tim RISEFARM" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">URL Cover Image</label>
+                                        <input id="article-image" type="text" class="w-full px-4 py-4 rounded-2xl border border-stone-200 outline-none focus:border-emerald-500" placeholder="https://... atau nama-file.jpg" />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Ringkasan Singkat</label>
+                                    <textarea id="article-excerpt" rows="3" class="w-full px-4 py-4 rounded-2xl border border-stone-200 outline-none focus:border-emerald-500" placeholder="Ringkasan untuk tampil di kartu artikel..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Isi Artikel</label>
+                                    <textarea id="article-content" rows="16" class="w-full px-4 py-4 rounded-2xl border border-stone-200 outline-none focus:border-emerald-500" placeholder="Tulis isi artikel di sini. Pisahkan paragraf dengan baris kosong."></textarea>
+                                    <p class="text-sm text-stone-500 mt-2">Tips: gunakan baris kosong antar paragraf. Anda juga bisa menulis judul bagian dengan awalan ##.</p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="bg-white rounded-3xl shadow-sm border border-stone-200 p-6">
+                            <div class="flex items-center justify-between gap-3 mb-4">
+                                <h2 class="text-xl font-bold text-emerald-950">Preview Cepat</h2>
+                                <span id="admin-badge" class="hidden px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Admin</span>
+                            </div>
+                            <div id="editor-preview" class="rounded-2xl overflow-hidden border border-stone-200 bg-stone-50">
+                                <div class="h-44 bg-stone-200 flex items-center justify-center text-stone-500">Cover artikel</div>
+                                <div class="p-5">
+                                    <span class="inline-flex px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold mb-3">Draft</span>
+                                    <h3 class="text-xl font-bold text-emerald-950 mb-2">Judul artikel akan tampil di sini</h3>
+                                    <p class="text-stone-600 text-sm">Ringkasan artikel akan muncul sebagai preview card.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-3xl shadow-sm border border-stone-200 p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-bold text-emerald-950">Daftar Artikel</h2>
+                                <span id="article-count" class="text-sm text-stone-500">0 artikel</span>
+                            </div>
+                            <div id="editor-article-list" class="space-y-3 max-h-[520px] overflow-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+
+    <footer id="contact" class="bg-[#2A231D] text-stone-300 pt-24 pb-8">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="grid md:grid-cols-12 gap-12 mb-16">
+                <div class="md:col-span-4">
+                    <div class="flex items-center gap-2 mb-6">
+                        <i data-lucide="leaf" class="w-8 h-8 text-emerald-500"></i>
+                        <span class="text-2xl font-bold tracking-tighter text-white">RISE<span class="text-orange-500">FARM</span></span>
+                    </div>
+                    <p class="text-stone-400 mb-8 leading-relaxed" data-i18n="footer.desc">Menghadirkan inovasi agritech dalam budidaya ubi untuk masa depan pangan nusantara yang lebih baik, alami, dan berkelanjutan.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 md:col-start-6">
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-wider text-sm" data-i18n="footer.nav">Navigasi</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#about" class="hover:text-orange-400 transition-colors" data-i18n="nav.about">Tentang Kami</a></li>
+                        <li><a href="#products" class="hover:text-orange-400 transition-colors" data-i18n="nav.products">Produk</a></li>
+                        <li><a href="#process" class="hover:text-orange-400 transition-colors" data-i18n="nav.process">Proses</a></li>
+                        <li><a href="#gallery" class="hover:text-orange-400 transition-colors" data-i18n="nav.gallery">Galeri</a></li>
+                        <li><a href="#news" class="hover:text-orange-400 transition-colors">Artikel</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:col-span-4 md:col-start-9">
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-wider text-sm" data-i18n="footer.contact">Hubungi Kami</h4>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4"><i data-lucide="map-pin" class="w-6 h-6 text-emerald-500 shrink-0"></i><span>jl. Parungkuda, Kabupaten Sukabumi, Jawa Barat Indonesia</span></li>
+                        <li class="flex items-center gap-4"><i data-lucide="phone" class="w-6 h-6 text-emerald-500 shrink-0"></i><span>+62 812 8109 1257</span></li>
+                        <li class="flex items-center gap-4"><i data-lucide="mail" class="w-6 h-6 text-emerald-500 shrink-0"></i><span>csrisefarm@gmail.com</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-stone-500">
+                <p>&copy; <span id="current-year"></span> <span data-i18n="footer.copyright">RISEFARM Indonesia. Hak Cipta Dilindungi.</span></p>
+                <p data-i18n="footer.tagline">Menumbuhkan Potensi Ubi, Mengangkat Masa Depan Pertanian.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        const STORAGE_KEY = 'risefarm_articles_v1';
+        const ADMIN_SESSION_KEY = 'risefarm_admin_session';
+        const ADMIN_PASSWORD = 'RiseFarmbebas2026';
+        const DEFAULT_ARTICLES = [
+            {
+                id: 'a1',
+                title: 'Panen Ubi Cilembu RISEFARM Naik 25% di Kuartal Ini',
+                category: 'Berita',
+                author: 'Tim RISEFARM',
+                image: 'susunan_ubi.jpeg',
+                excerpt: 'Optimalisasi bibit unggul dan pemupukan presisi mendorong kenaikan hasil panen yang lebih konsisten.',
+                content: 'RISEFARM mencatat peningkatan panen ubi Cilembu hingga 25% dibanding periode sebelumnya.\n\nKenaikan ini didorong oleh penggunaan bibit unggul, pemantauan kelembapan lahan, dan proses sortir pasca panen yang lebih ketat.\n\n## Dampak ke mitra\n\nPeningkatan hasil panen memberi pasokan yang lebih stabil untuk kebutuhan supermarket dan pembeli B2B.\n\nSelain itu, mitra petani juga memperoleh pendampingan budidaya yang lebih terukur.',
+                status: 'published',
+                createdAt: new Date().toISOString(),
+                publishedAt: new Date().toISOString()
+            },
+            {
+                id: 'a2',
+                title: '5 Tips Menjaga Kualitas Ubi Setelah Panen',
+                category: 'Edukasi',
+                author: 'Admin RISEFARM',
+                image: 'penyucian_tahap_awal.jpeg',
+                excerpt: 'Penyimpanan, pembersihan, dan pengemasan yang tepat sangat menentukan kualitas ubi sampai ke pelanggan.',
+                content: 'Menjaga kualitas ubi setelah panen adalah kunci utama untuk mempertahankan kesegaran produk.\n\nPertama, lakukan sortir awal untuk memisahkan ubi yang rusak. Kedua, hindari pencucian berlebihan jika produk belum akan dikirim.\n\n## Pengemasan\n\nGunakan kemasan yang memiliki sirkulasi udara baik agar kelembapan tetap terkontrol.\n\n## Distribusi\n\nPastikan pengiriman dilakukan tepat waktu dengan handling yang minim benturan.',
+                status: 'published',
+                createdAt: new Date(Date.now() - 86400000).toISOString(),
+                publishedAt: new Date(Date.now() - 86400000).toISOString()
+            }
+        ];
+
+        const translations = {
+            id: {
+                pageTitle: 'RISEFARM - Pelopor Agritech Ubi Nusantara',
+                nav: { about: 'Tentang Kami', products: 'Produk', process: 'Proses', gallery: 'Galeri', articles: 'Artikel', contact: 'Kontak', detail: 'Pelajari Detail', contactBtn: 'Hubungi Kami', write: 'Tulis Artikel' },
+                hero: { badge: 'Penyedia ubi berkualitas', title: 'Pasokan Ubi yang Stabil, Terukur, dan Siap untuk Skala Bisnis.', desc: 'Dari bibit unggul hingga ke tangan Anda. RISEFARM menghadirkan inovasi pertanian ubi yang berkelanjutan, memberdayakan petani lokal, dan menghasilkan panen kualitas premium untuk kebutuhan supermarket & ekspor.', cta1: 'Lihat Produk Kami', ctaArticles: 'Baca Artikel & Berita' },
+                about: { badge: 'Alami & Berkelanjutan', kicker: 'Tentang RISEFARM', title: 'Akar Kuat untuk <br/>Pertanian Modern', desc1: 'RISEFARM bukan sekadar lahan pertanian. Kami adalah ekosistem agritech yang berdedikasi untuk merevolusi budidaya ubi di Nusantara. Berdiri dengan visi untuk menciptakan ketahanan pangan yang berkelanjutan dan menyejahterakan petani lokal.', desc2: 'Kami memadukan kearifan lokal dengan teknologi presisi—mulai dari seleksi bibit, pemantauan tanah, hingga distribusi cerdas, memastikan setiap ubi yang sampai ke tangan Anda memiliki kualitas nutrisi dan rasa terbaik.', land: 'Hektar Lahan Aktif', farmers: 'Mitra Petani' },
+                why: { title: 'Mengapa Memilih RISEFARM?', desc: 'Komitmen kami pada kualitas, lingkungan, dan komunitas membedakan kami di setiap langkah rantai pasok.', q1: 'Kualitas Premium', q1d: 'Sistem kontrol kualitas ketat memastikan ubi segar, manis, dan kaya nutrisi.', q2: 'Ramah Lingkungan', q2d: 'Metode pertanian regeneratif yang menjaga kesuburan tanah untuk generasi mendatang.', q3: 'Agritech Modern', q3d: 'Pupuk racikan berbasis kebutuhan tanah, dan bibit unggul hasil kultur jaringan untuk menciptakan sistem pertanian yang lebih efisien, produktif, dan menghasilkan panen berkualitas tinggi secara konsisten.', q4: 'Pemberdayaan Lokal', q4d: 'Bermitra dengan puluhan petani desa, memberikan pelatihan dan pembagian hasil yang adil.' },
+                products: { kicker: 'Hasil Bumi Terbaik', title: 'Produk & Layanan Kami', desc: 'Dari ubi madu yang manis legit hingga varietas ungu yang kaya antioksidan, kami menyediakan yang terbaik untuk Anda.', badge1: 'Unggulan', badge3: 'Baru', p1: 'Ubi Segar Kualitas Ekspor', p1d: 'Pilihan ubi premium lengkap seperti Cilembu, ungu, Jepang, Murasaki, Pinky, TW, dan lainnya. Seluruh produk melalui proses sortir ketat dengan kualitas terjamin serta bebas dari pestisida kimia berbahaya, sehingga lebih sehat dan siap bersaing di pasar modern.', p2: 'Ubi Segar Kualitas Supermarket', p2d: 'Kami menyediakan ubi segar berkualitas tinggi yang siap untuk distribusi ke supermarket dan toko ritel.', p3: 'Sayuran dan buah buahan', p3d: 'Sayuran dan buah buahan segar yang tumbuh dengan metode pertanian organik kami menyediakan kualitas ekspor dan kualitas supermarket (melon, jeruk, wortel, bayam dll).', detail: 'Pelajari Detail' },
+                process: { kicker: 'Perjalanan Kualitas', title: 'Dari Kebun Ke Meja Anda', desc: 'Setiap tahap dipantau secara presisi untuk menjamin kualitas terbaik.', s1: '1. Pembibitan', s1d: 'Seleksi varietas unggul di fasilitas nursery khusus kami.', s2: '2. Penanaman', s2d: 'Perawatan intensif dengan pemupukan organik dan irigasi presisi.', s3: '3. Panen & Sortir', s3d: 'Dipanen pada usia optimal, disortir ketat berdasarkan standar mutu.', s4: '4. Distribusi', s4d: 'Pengemasan aman dan logistik cepat agar kesegaran tetap terjaga.' },
+                gallery: { kicker: 'Dokumentasi', title: 'Melihat Lebih Dekat RISEFARM', all: 'Lihat Semua', caption1: 'Pemberdayaan Petani Lokal' },
+                articles: { kicker: 'Update RISEFARM', title: 'Artikel & Berita Terbaru', desc: 'Bagikan cerita panen, inovasi pertanian, aktivitas kebun, dan kabar terbaru perusahaan dalam satu halaman yang rapi.', viewAll: 'Lihat Semua Artikel', write: 'Tulis Sekarang' },
+                testimonials: { title: 'Suara Mitra Kami', t1: '"Sejak bermitra dengan RISEFARM, hasil panen lahan saya meningkat secara signifikan. Edukasi pertanian organik yang diberikan sangat mengubah pola pikir kami sebagai petani di desa."', t1n: 'Bapak Sugeng', t1r: 'Ketua Kelompok Tani, Jawa Barat', t2: '"Kualitas pasokan ubi madu dari RISEFARM selalu konsisten. Hal ini sangat penting bagi industri pengolahan makanan kami. Pengiriman selalu tepat waktu dan ukurannya presisi."', t2n: 'Ibu Diana', t2r: 'Direktur Pengadaan, PT Nutrisi Maju' },
+                cta: { title: 'Mari Tumbuh Bersama <span class="text-orange-400">RISEFARM</span>', desc: 'Apakah Anda petani yang ingin berkembang, atau perusahaan yang membutuhkan pasokan ubi premium berkelanjutan? Kami siap menjadi mitra terbaik Anda.', btn1: 'Jadilah Mitra Kami', btn2: 'Pesan Produk' },
+                footer: { desc: 'Menghadirkan inovasi agritech dalam budidaya ubi untuk masa depan pangan nusantara yang lebih baik, alami, dan berkelanjutan.', nav: 'Navigasi', contact: 'Hubungi Kami', copyright: 'RISEFARM Indonesia. Hak Cipta Dilindungi.', tagline: 'Menumbuhkan Potensi Ubi, Mengangkat Masa Depan Pertanian.' }
+            },
+            en: {
+                pageTitle: 'RISEFARM - Pioneer of Indonesian Sweet Potato Agritech',
+                nav: { about: 'About Us', products: 'Products', process: 'Process', gallery: 'Gallery', articles: 'Articles', contact: 'Contact', detail: 'Learn More', contactBtn: 'Contact Us', write: 'Write Article' },
+                hero: { badge: 'Quality sweet potato supplier', title: 'Stable, Measurable Sweet Potato Supply Ready for Business Scale.', desc: 'From superior seedlings to your hands. RISEFARM delivers sustainable sweet potato farming innovation, empowers local farmers, and produces premium harvests for supermarkets and export markets.', cta1: 'View Our Products', ctaArticles: 'Read Articles & News' },
+                about: { badge: 'Natural & Sustainable', kicker: 'About RISEFARM', title: 'Strong Roots for <br/>Modern Agriculture', desc1: 'RISEFARM is more than farmland. We are an agritech ecosystem dedicated to transforming sweet potato cultivation across Indonesia, with a vision to build sustainable food security and improve local farmers’ livelihoods.', desc2: 'We combine local wisdom with precision technology—from seed selection and soil monitoring to smart distribution—ensuring every sweet potato delivered to you has the best taste and nutritional quality.', land: 'Hectares of Active Farmland', farmers: 'Farmer Partners' },
+                why: { title: 'Why Choose RISEFARM?', desc: 'Our commitment to quality, sustainability, and community sets us apart at every step of the supply chain.', q1: 'Premium Quality', q1d: 'Strict quality control ensures fresh, sweet, and nutrient-rich sweet potatoes.', q2: 'Eco-Friendly', q2d: 'Regenerative farming methods preserve soil fertility for future generations.', q3: 'Modern Agritech', q3d: 'Custom soil-based fertilizers and tissue-culture superior seedlings create a more efficient, productive farming system with consistently high-quality yields.', q4: 'Local Empowerment', q4d: 'Partnering with dozens of village farmers through training and fair profit sharing.' },
+                products: { kicker: 'Best Harvest', title: 'Our Products & Services', desc: 'From honey sweet potatoes to antioxidant-rich purple varieties, we provide the best for you.', badge1: 'Featured', badge3: 'New', p1: 'Export-Grade Fresh Sweet Potatoes', p1d: 'A complete range of premium sweet potatoes such as Cilembu, purple, Japanese, Murasaki, Pinky, TW, and more. All products go through strict sorting with guaranteed quality and are free from harmful chemical pesticides, making them healthier and ready for modern markets.', p2: 'Supermarket-Grade Fresh Sweet Potatoes', p2d: 'We provide high-quality fresh sweet potatoes ready for distribution to supermarkets and retail stores.', p3: 'Vegetables and Fruits', p3d: 'Fresh vegetables and fruits grown with our organic farming methods. We supply both export-grade and supermarket-grade produce such as melons, oranges, carrots, spinach, and more.', detail: 'Learn More' },
+                process: { kicker: 'Quality Journey', title: 'From Farm to Your Table', desc: 'Every stage is monitored with precision to ensure top quality.', s1: '1. Seedling', s1d: 'Selection of superior varieties in our dedicated nursery facilities.', s2: '2. Planting', s2d: 'Intensive care with organic fertilization and precision irrigation.', s3: '3. Harvest & Sorting', s3d: 'Harvested at optimal maturity and strictly sorted based on quality standards.', s4: '4. Distribution', s4d: 'Safe packaging and fast logistics to preserve freshness.' },
+                gallery: { kicker: 'Documentation', title: 'A Closer Look at RISEFARM', all: 'View All', caption1: 'Empowering Local Farmers' },
+                articles: { kicker: 'RISEFARM Updates', title: 'Latest Articles & News', desc: 'Share harvest stories, farming innovation, field activities, and company updates in one clean page.', viewAll: 'View All Articles', write: 'Write Now' },
+                testimonials: { title: 'What Our Partners Say', t1: '"Since partnering with RISEFARM, the yield from my land has increased significantly. The organic farming education they provided has truly changed our mindset as village farmers."', t1n: 'Mr. Sugeng', t1r: 'Farmer Group Leader, West Java', t2: '"The quality of honey sweet potato supply from RISEFARM is always consistent. This is crucial for our food processing industry. Delivery is always on time and sizing is precise."', t2n: 'Mrs. Diana', t2r: 'Procurement Director, PT Nutrisi Maju' },
+                cta: { title: 'Let’s Grow Together with <span class="text-orange-400">RISEFARM</span>', desc: 'Are you a farmer looking to grow, or a company needing sustainable premium sweet potato supply? We are ready to be your best partner.', btn1: 'Become Our Partner', btn2: 'Order Products' },
+                footer: { desc: 'Bringing agritech innovation to sweet potato cultivation for a better, more natural, and sustainable future of Indonesian food.', nav: 'Navigation', contact: 'Contact Us', copyright: 'RISEFARM Indonesia. All Rights Reserved.', tagline: 'Growing Sweet Potato Potential, Elevating the Future of Agriculture.' }
+            }
+        };
+
+        function getNestedValue(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateLanguageButtons(lang) {
+            const desktopButtons = [document.getElementById('lang-id'), document.getElementById('lang-en')];
+            const mobileButtons = [document.getElementById('lang-id-mobile'), document.getElementById('lang-en-mobile')];
+
+            desktopButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-white/20', 'text-orange-300', 'border-orange-300');
+                btn.classList.add('text-white', 'border-white/30');
+            });
+
+            mobileButtons.forEach(btn => {
+                btn.classList.remove('bg-orange-50', 'text-orange-500', 'border-orange-300');
+                btn.classList.add('text-[#4A3B32]', 'border-stone-300');
+            });
+
+            if (lang === 'id') {
+                document.getElementById('lang-id').classList.add('active', 'bg-white/20', 'text-orange-300', 'border-orange-300');
+                document.getElementById('lang-id-mobile').classList.add('bg-orange-50', 'text-orange-500', 'border-orange-300');
+            } else {
+                document.getElementById('lang-en').classList.add('active', 'bg-white/20', 'text-orange-300', 'border-orange-300');
+                document.getElementById('lang-en-mobile').classList.add('bg-orange-50', 'text-orange-500', 'border-orange-300');
+            }
+        }
+
+        function setLanguage(lang) {
+            localStorage.setItem('risefarm-language', lang);
+            document.documentElement.lang = lang;
+            document.title = translations[lang].pageTitle;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const value = getNestedValue(translations[lang], key);
+                if (value !== undefined) el.innerHTML = value;
+            });
+            updateLanguageButtons(lang);
+            lucide.createIcons();
+        }
+
+        function isAdmin() {
+            return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+        }
+
+        function updateAdminUI() {
+            const loggedIn = isAdmin();
+            const adminBtn = document.getElementById('admin-auth-btn');
+            const adminBtnMobile = document.getElementById('admin-auth-btn-mobile');
+            const publishBtn = document.getElementById('publish-btn');
+            const adminStatusText = document.getElementById('admin-status-text');
+            const adminBadge = document.getElementById('admin-badge');
+
+            if (adminBtn) adminBtn.textContent = loggedIn ? 'Admin Logout' : 'Admin Login';
+            if (adminBtnMobile) adminBtnMobile.textContent = loggedIn ? 'Admin Logout' : 'Admin Login';
+            if (publishBtn) {
+                publishBtn.disabled = !loggedIn;
+                publishBtn.classList.toggle('opacity-50', !loggedIn);
+                publishBtn.classList.toggle('cursor-not-allowed', !loggedIn);
+            }
+            if (adminStatusText) {
+                adminStatusText.textContent = loggedIn
+                    ? 'Mode admin aktif. Anda bisa publish dan hapus artikel.'
+                    : 'Mode publik aktif. Login admin untuk publish/hapus artikel.';
+            }
+            if (adminBadge) adminBadge.classList.toggle('hidden', !loggedIn);
+        }
+
+        function toggleAdminAuth() {
+            if (isAdmin()) {
+                sessionStorage.removeItem(ADMIN_SESSION_KEY);
+                updateAdminUI();
+                renderAllArticleViews();
+                return;
+            }
+
+            const password = prompt('Masukkan password admin');
+            if (password === null) return;
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+                updateAdminUI();
+                renderAllArticleViews();
+                alert('Login admin berhasil.');
+            } else {
+                alert('Password admin salah.');
+            }
+        }
+
+        function getArticles() {
+            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+            if (!stored || !stored.length) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_ARTICLES));
+                return DEFAULT_ARTICLES;
+            }
+            return stored;
+        }
+
+        function saveArticles(articles) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+
+        function escapeHtml(str = '') {
+            return str.replace(/[&<>"']/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[tag]));
+        }
+
+        function renderArticleContent(content = '') {
+            return content
+                .split('\n\n')
+                .map(block => {
+                    const trimmed = block.trim();
+                    if (!trimmed) return '';
+                    if (trimmed.startsWith('##')) return `<h2>${escapeHtml(trimmed.replace(/^##\s*/, ''))}</h2>`;
+                    return `<p>${escapeHtml(trimmed)}</p>`;
+                })
+                .join('');
+        }
+
+        function articleCard(article, showStatus = false) {
+            return `
+                <article class="bg-white rounded-3xl overflow-hidden shadow-sm border border-stone-200 hover:shadow-xl transition-all">
+                    <div class="h-56 overflow-hidden bg-stone-200">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80'}" alt="${escapeHtml(article.title)}" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 flex-wrap mb-3">
+                            <span class="inline-flex px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold">${escapeHtml(article.category || 'Artikel')}</span>
+                            ${showStatus ? `<span class="inline-flex px-3 py-1 rounded-full ${article.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-stone-100 text-stone-700'} text-xs font-bold">${article.status}</span>` : ''}
+                        </div>
+                        <h3 class="text-2xl font-bold text-emerald-950 mb-3 line-clamp-2">${escapeHtml(article.title)}</h3>
+                        <p class="text-stone-600 mb-5 line-clamp-3">${escapeHtml(article.excerpt || '')}</p>
+                        <div class="flex items-center justify-between gap-3 text-sm text-stone-500">
+                            <span>${escapeHtml(article.author || 'Admin')}</span>
+                            <span>${formatDate(article.publishedAt || article.createdAt)}</span>
+                        </div>
+                        <div class="mt-5 flex items-center gap-3">
+                            <a href="#article/${article.id}" class="text-emerald-700 font-semibold hover:text-orange-600">Baca selengkapnya</a>
+                            <button onclick="editArticle('${article.id}')" class="text-stone-500 hover:text-emerald-700">Edit</button>
+                            ${isAdmin() ? `<button onclick="deleteArticle('${article.id}')" class="text-red-500 hover:text-red-700">Hapus</button>` : ''}
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderHomeArticles() {
+            const articles = getArticles().filter(a => a.status === 'published').sort((a, b) => new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt));
+            const featured = document.getElementById('featured-article');
+            const grid = document.getElementById('articles-grid');
+            if (!articles.length) {
+                featured.innerHTML = '';
+                grid.innerHTML = '<div class="md:col-span-3 bg-white rounded-3xl border border-dashed border-stone-300 p-10 text-center text-stone-500">Belum ada artikel dipublikasikan.</div>';
+                return;
+            }
+            const [first, ...rest] = articles;
+            featured.innerHTML = `
+                <div class="bg-white rounded-[2rem] overflow-hidden shadow-sm border border-stone-200 grid lg:grid-cols-2">
+                    <div class="h-72 lg:h-full overflow-hidden bg-stone-200"><img src="${first.image || ''}" alt="${escapeHtml(first.title)}" class="w-full h-full object-cover" /></div>
+                    <div class="p-8 md:p-10 flex flex-col justify-center">
+                        <span class="inline-flex w-max px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold mb-4">Artikel Unggulan</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-emerald-950 mb-4">${escapeHtml(first.title)}</h3>
+                        <p class="text-stone-600 text-lg mb-6">${escapeHtml(first.excerpt || '')}</p>
+                        <div class="text-sm text-stone-500 mb-6">${escapeHtml(first.author || 'Admin')} • ${formatDate(first.publishedAt || first.createdAt)}</div>
+                        <div class="flex gap-4"><a href="#article/${first.id}" class="px-6 py-3 rounded-full bg-emerald-700 text-white font-semibold hover:bg-emerald-800">Baca Artikel</a><a href="#editor" onclick="editArticle('${first.id}')" class="px-6 py-3 rounded-full border border-stone-300 font-semibold hover:bg-stone-50">Edit</a></div>
+                    </div>
+                </div>`;
+            grid.innerHTML = rest.slice(0, 6).map(article => articleCard(article, false)).join('');
+        }
+
+        function renderNewsList() {
+            const search = (document.getElementById('search-articles')?.value || '').toLowerCase();
+            const statusFilter = document.getElementById('filter-status')?.value || 'published';
+            let articles = getArticles().sort((a, b) => new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt));
+            if (statusFilter !== 'all') articles = articles.filter(a => a.status === statusFilter);
+            if (search) articles = articles.filter(a => [a.title, a.category, a.author, a.excerpt].join(' ').toLowerCase().includes(search));
+            document.getElementById('news-list').innerHTML = articles.length
+                ? articles.map(article => articleCard(article, true)).join('')
+                : '<div class="lg:col-span-3 bg-white rounded-3xl border border-dashed border-stone-300 p-10 text-center text-stone-500">Artikel tidak ditemukan.</div>';
+        }
+
+        function renderEditorList() {
+            const articles = getArticles().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            document.getElementById('article-count').textContent = `${articles.length} artikel`;
+            document.getElementById('editor-article-list').innerHTML = articles.map(article => `
+                <button onclick="editArticle('${article.id}')" class="w-full text-left p-4 rounded-2xl border border-stone-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all">
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full ${article.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-stone-100 text-stone-700'}">${article.status}</span>
+                        <span class="text-xs text-stone-500">${formatDate(article.publishedAt || article.createdAt)}</span>
+                    </div>
+                    <h3 class="font-bold text-emerald-950 line-clamp-2 mb-1">${escapeHtml(article.title)}</h3>
+                    <p class="text-sm text-stone-500 line-clamp-2">${escapeHtml(article.excerpt || '')}</p>
+                </button>
+            `).join('');
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('article-title').value || 'Judul artikel akan tampil di sini';
+            const excerpt = document.getElementById('article-excerpt').value || 'Ringkasan artikel akan muncul sebagai preview card.';
+            const image = document.getElementById('article-image').value;
+            const articleId = document.getElementById('article-id').value;
+            const articles = getArticles();
+            const existing = articles.find(a => a.id === articleId);
+            const status = existing?.status || 'draft';
+
+            document.getElementById('editor-preview').innerHTML = `
+                <div class="h-44 bg-stone-200 overflow-hidden flex items-center justify-center text-stone-500">
+                    ${image ? `<img src="${image}" alt="preview" class="w-full h-full object-cover">` : 'Cover artikel'}
+                </div>
+                <div class="p-5">
+                    <span class="inline-flex px-3 py-1 rounded-full ${status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700'} text-xs font-bold mb-3">${status}</span>
+                    <h3 class="text-xl font-bold text-emerald-950 mb-2">${escapeHtml(title)}</h3>
+                    <p class="text-stone-600 text-sm">${escapeHtml(excerpt)}</p>
+                </div>`;
+        }
+
+        function resetForm() {
+            document.getElementById('article-form').reset();
+            document.getElementById('article-id').value = '';
+            updatePreview();
+        }
+
+        function upsertArticle(status) {
+            if (status === 'published' && !isAdmin()) {
+                alert('Hanya admin yang bisa publish artikel.');
+                return;
+            }
+            const idField = document.getElementById('article-id');
+            const title = document.getElementById('article-title').value.trim();
+            if (!title) {
+                alert('Judul artikel wajib diisi.');
+                return;
+            }
+            const articles = getArticles();
+            const now = new Date().toISOString();
+            const articleId = idField.value || `article_${Date.now()}`;
+            const existingIndex = articles.findIndex(a => a.id === articleId);
+
+            const payload = {
+                id: articleId,
+                title,
+                category: document.getElementById('article-category').value.trim(),
+                author: document.getElementById('article-author').value.trim() || 'Tim RISEFARM',
+                image: document.getElementById('article-image').value.trim(),
+                excerpt: document.getElementById('article-excerpt').value.trim(),
+                content: document.getElementById('article-content').value.trim(),
+                status,
+                createdAt: existingIndex >= 0 ? articles[existingIndex].createdAt : now,
+                publishedAt: status === 'published' ? (existingIndex >= 0 && articles[existingIndex].publishedAt ? articles[existingIndex].publishedAt : now) : (existingIndex >= 0 ? articles[existingIndex].publishedAt : null)
+            };
+
+            if (existingIndex >= 0) {
+                articles[existingIndex] = payload;
+            } else {
+                articles.push(payload);
+            }
+
+            saveArticles(articles);
+            idField.value = articleId;
+            renderAllArticleViews();
+            updatePreview();
+            location.hash = status === 'published' ? '#news' : '#editor';
+        }
+
+        function editArticle(id) {
+            const article = getArticles().find(a => a.id === id);
+            if (!article) return;
+            document.getElementById('article-id').value = article.id;
+            document.getElementById('article-title').value = article.title || '';
+            document.getElementById('article-category').value = article.category || '';
+            document.getElementById('article-author').value = article.author || '';
+            document.getElementById('article-image').value = article.image || '';
+            document.getElementById('article-excerpt').value = article.excerpt || '';
+            document.getElementById('article-content').value = article.content || '';
+            updatePreview();
+            location.hash = '#editor';
+        }
+
+        function deleteArticle(id) {
+            if (!isAdmin()) {
+                alert('Hanya admin yang bisa menghapus artikel.');
+                return;
+            }
+            if (!confirm('Hapus artikel ini?')) return;
+            const filtered = getArticles().filter(a => a.id !== id);
+            saveArticles(filtered);
+            if (document.getElementById('article-id').value === id) resetForm();
+            renderAllArticleViews();
+            if (location.hash.startsWith('#article/')) location.hash = '#news';
+        }
+
+        function renderEditorList() {
+            const articles = getArticles().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            const countEl = document.getElementById('article-count');
+            const listEl = document.getElementById('editor-article-list');
+            if (!countEl || !listEl) return;
+            countEl.textContent = `${articles.length} artikel`;
+            listEl.innerHTML = articles.map(article => `
+                <button onclick="editArticle('${article.id}')" class="w-full text-left p-4 rounded-2xl border border-stone-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all">
+                    <div class="flex items-center justify-between gap-3 mb-2">
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full ${article.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-stone-100 text-stone-700'}">${article.status}</span>
+                        <span class="text-xs text-stone-500">${formatDate(article.publishedAt || article.createdAt)}</span>
+                    </div>
+                    <h3 class="font-bold text-emerald-950 line-clamp-2 mb-1">${escapeHtml(article.title)}</h3>
+                    <p class="text-sm text-stone-500 line-clamp-2">${escapeHtml(article.excerpt || '')}</p>
+                </button>
+            `).join('');
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('article-title')?.value || 'Judul artikel akan tampil di sini';
+            const excerpt = document.getElementById('article-excerpt')?.value || 'Ringkasan artikel akan muncul sebagai preview card.';
+            const image = document.getElementById('article-image')?.value;
+            const articleId = document.getElementById('article-id')?.value;
+            const articles = getArticles();
+            const existing = articles.find(a => a.id === articleId);
+            const status = existing?.status || 'draft';
+            const preview = document.getElementById('editor-preview');
+            if (!preview) return;
+
+            preview.innerHTML = `
+                <div class="h-44 bg-stone-200 overflow-hidden flex items-center justify-center text-stone-500">
+                    ${image ? `<img src="${image}" alt="preview" class="w-full h-full object-cover">` : 'Cover artikel'}
+                </div>
+                <div class="p-5">
+                    <span class="inline-flex px-3 py-1 rounded-full ${status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700'} text-xs font-bold mb-3">${status}</span>
+                    <h3 class="text-xl font-bold text-emerald-950 mb-2">${escapeHtml(title)}</h3>
+                    <p class="text-stone-600 text-sm">${escapeHtml(excerpt)}</p>
+                </div>`;
+        }
+
+        function resetForm() {
+            document.getElementById('article-form')?.reset();
+            const idField = document.getElementById('article-id');
+            if (idField) idField.value = '';
+            updatePreview();
+        }
+
+        function upsertArticle(status) {
+            if (status === 'published' && !isAdmin()) {
+                alert('Hanya admin yang bisa publish artikel.');
+                return;
+            }
+            const idField = document.getElementById('article-id');
+            const title = document.getElementById('article-title')?.value.trim();
+            if (!title) {
+                alert('Judul artikel wajib diisi.');
+                return;
+            }
+            const articles = getArticles();
+            const now = new Date().toISOString();
+            const articleId = idField?.value || `article_${Date.now()}`;
+            const existingIndex = articles.findIndex(a => a.id === articleId);
+
+            const payload = {
+                id: articleId,
+                title,
+                category: document.getElementById('article-category')?.value.trim(),
+                author: document.getElementById('article-author')?.value.trim() || 'Tim RISEFARM',
+                image: document.getElementById('article-image')?.value.trim(),
+                excerpt: document.getElementById('article-excerpt')?.value.trim(),
+                content: document.getElementById('article-content')?.value.trim(),
+                status,
+                createdAt: existingIndex >= 0 ? articles[existingIndex].createdAt : now,
+                publishedAt: status === 'published' ? (existingIndex >= 0 && articles[existingIndex].publishedAt ? articles[existingIndex].publishedAt : now) : (existingIndex >= 0 ? articles[existingIndex].publishedAt : null)
+            };
+
+            if (existingIndex >= 0) {
+                articles[existingIndex] = payload;
+            } else {
+                articles.push(payload);
+            }
+
+            saveArticles(articles);
+            if (idField) idField.value = articleId;
+            renderAllArticleViews();
+            updatePreview();
+            location.hash = status === 'published' ? '#news' : '#editor';
+        }
+
+        function editArticle(id) {
+            const article = getArticles().find(a => a.id === id);
+            if (!article) return;
+            document.getElementById('article-id').value = article.id;
+            document.getElementById('article-title').value = article.title || '';
+            document.getElementById('article-category').value = article.category || '';
+            document.getElementById('article-author').value = article.author || '';
+            document.getElementById('article-image').value = article.image || '';
+            document.getElementById('article-excerpt').value = article.excerpt || '';
+            document.getElementById('article-content').value = article.content || '';
+            updatePreview();
+            location.hash = '#editor';
+        }
+
+        function deleteArticle(id) {
+            if (!isAdmin()) {
+                alert('Hanya admin yang bisa menghapus artikel.');
+                return;
+            }
+            if (!confirm('Hapus artikel ini?')) return;
+            const filtered = getArticles().filter(a => a.id !== id);
+            saveArticles(filtered);
+            if (document.getElementById('article-id')?.value === id) resetForm();
+            renderAllArticleViews();
+            if (location.hash.startsWith('#article/')) location.hash = '#news';
+        }
+
+        function renderArticleDetail(id) {
+            const article = getArticles().find(a => a.id === id);
+            const container = document.getElementById('article-detail-container');
+            if (!article) {
+                container.innerHTML = '<div class="bg-white rounded-3xl p-10 border border-stone-200 text-center text-stone-500">Artikel tidak ditemukan.</div>';
+                return;
+            }
+            container.innerHTML = `
+                <article class="max-w-4xl mx-auto">
+                    <div class="mb-8">
+                        <div class="flex flex-wrap items-center gap-3 mb-5">
+                            <span class="inline-flex px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold">${escapeHtml(article.category || 'Artikel')}</span>
+                            <span class="text-sm text-stone-500">${formatDate(article.publishedAt || article.createdAt)}</span>
+                            <span class="text-sm text-stone-500">${escapeHtml(article.author || 'Admin')}</span>
+                        </div>
+                        <h1 class="text-4xl md:text-6xl font-bold text-emerald-950 leading-tight mb-6">${escapeHtml(article.title)}</h1>
+                        <p class="text-xl text-stone-600 leading-relaxed">${escapeHtml(article.excerpt || '')}</p>
+                    </div>
+                    <div class="rounded-[2rem] overflow-hidden mb-10 bg-stone-200">
+                        <img src="${article.image || 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80'}" alt="${escapeHtml(article.title)}" class="w-full h-[280px] md:h-[500px] object-cover" />
+                    </div>
+                    <div class="bg-white rounded-[2rem] p-8 md:p-12 border border-stone-200 prose-article">${renderArticleContent(article.content)}</div>
+                    <div class="mt-8 flex gap-4 flex-wrap"><button onclick="editArticle('${article.id}')" class="px-6 py-3 rounded-full bg-emerald-700 text-white font-semibold hover:bg-emerald-800">Edit Artikel</button>${isAdmin() ? `<button onclick="deleteArticle('${article.id}')" class="px-6 py-3 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700">Hapus Artikel</button>` : ''}<a href="#news" class="px-6 py-3 rounded-full border border-stone-300 font-semibold hover:bg-stone-50">Lihat Artikel Lain</a></div>
+                </article>`;
+        }
+
+        function renderAllArticleViews() {
+            renderHomeArticles();
+            renderNewsList();
+            renderEditorList();
+            updateAdminUI();
+            lucide.createIcons();
+        }
+
+        function showPage() {
+            const hash = location.hash || '#home';
+            const home = document.getElementById('home-page');
+            const news = document.getElementById('news-page');
+            const detail = document.getElementById('article-detail-page');
+            const editor = document.getElementById('editor-page');
+            [home, news, detail, editor].forEach(page => page.classList.add('page-hidden'));
+
+            if (hash === '#news') {
+                news.classList.remove('page-hidden');
+            } else if (hash === '#editor') {
+                editor.classList.remove('page-hidden');
+            } else if (hash.startsWith('#article/')) {
+                detail.classList.remove('page-hidden');
+                renderArticleDetail(hash.replace('#article/', ''));
+            } else {
+                home.classList.remove('page-hidden');
+            }
+
+            if (!hash.startsWith('#article/') && !['#news', '#editor'].includes(hash)) {
+                const target = document.querySelector(hash);
+                if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                navbar.classList.remove('py-5', 'bg-transparent');
+            } else {
+                navbar.classList.remove('scrolled');
+                navbar.classList.add('py-5', 'bg-transparent');
+            }
+        });
+
+        const btnMenu = document.getElementById('btn-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconMenu = document.getElementById('icon-menu');
+        const iconClose = document.getElementById('icon-close');
+
+        btnMenu.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+            iconMenu.classList.toggle('hidden');
+            iconClose.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+                iconMenu.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            });
+        });
+
+        document.getElementById('save-draft-btn').addEventListener('click', () => upsertArticle('draft'));
+        document.getElementById('publish-btn').addEventListener('click', () => upsertArticle('published'));
+        document.getElementById('new-article-btn').addEventListener('click', resetForm);
+        document.getElementById('search-articles').addEventListener('input', renderNewsList);
+        document.getElementById('filter-status').addEventListener('change', renderNewsList);
+        document.getElementById('admin-auth-btn').addEventListener('click', toggleAdminAuth);
+        document.getElementById('admin-auth-btn-mobile').addEventListener('click', toggleAdminAuth);
+        ['article-title', 'article-excerpt', 'article-image'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePreview);
+        });
+
+        window.addEventListener('hashchange', showPage);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right').forEach((el) => observer.observe(el));
+
+            const savedLang = localStorage.getItem('risefarm-language') || 'id';
+            setLanguage(savedLang);
+            updateAdminUI();
+            renderAllArticleViews();
+            updatePreview();
+            updatePreview();
+            showPage();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
