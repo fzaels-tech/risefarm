@@ -12,6 +12,13 @@ const SITE_URL = "https://risefarm.asia";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.svg",
+  },
   title: {
     default: "RISEFARM — Supplier Ubi Premium Indonesia",
     template: "%s | RISEFARM",
