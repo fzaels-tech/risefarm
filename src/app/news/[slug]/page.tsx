@@ -6,6 +6,7 @@ import { ArrowLeft, Info } from 'lucide-react'
 import { cookies } from 'next/headers'
 import { translations } from '@/lib/translations'
 import { getArticleBySlugWithLocaleFallback } from '@/lib/article-i18n'
+import { AuthEditArticleButton } from '@/components/AuthEditArticleButton'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import Image from 'next/image'
@@ -181,12 +182,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
                 </div>
 
                 <div className="mt-7 flex flex-wrap items-center gap-3">
-                  <Link
-                    href="/editor"
-                    className="inline-flex items-center rounded-full px-5 py-2.5 bg-emerald-700 text-white text-sm font-semibold hover:bg-emerald-800 transition-colors"
-                  >
-                    Edit Artikel
-                  </Link>
+                  <AuthEditArticleButton />
                   <Link
                     href="/news"
                     className="inline-flex items-center rounded-full px-5 py-2.5 border border-stone-300 bg-white text-stone-700 text-sm font-semibold hover:bg-stone-50 transition-colors"
