@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter);
+}
+
+@layer utilities {
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s ease-out;
+  }
+
+  .fade-in-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: all 1s ease-out;
+  }
+
+  .fade-in-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: all 1s ease-out;
+  }
+
+  .is-visible {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
