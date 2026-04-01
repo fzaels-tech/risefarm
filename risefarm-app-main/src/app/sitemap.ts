@@ -3,37 +3,8 @@ import prisma from '@/lib/prisma'
 
 const SITE_URL = 'https://risefarm.asia'
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const prismaAny = prisma as any
-
-  // Fetch all published article translations
-  const translations = await prismaAny.articleTranslation.findMany({
-    where: {
-      article: { status: 'published' },
-    },
-    select: {
-      slug: true,
-      locale: true,
-      article: {
-        select: { updatedAt: true },
-      },
-    },
-  })
-
-  const articleUrls: MetadataRoute.Sitemap = translations.map((t: any) => ({
-    url: `${SITE_URL}/news/${t.slug}`,
-    lastModified: t.article.updatedAt,
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-    alternates: {
-      languages: {
-        'id-ID': `${SITE_URL}/news/${t.slug}`,
-        'en-US': `${SITE_URL}/news/${t.slug}`,
-      },
-    },
-  }))
-
-  const staticPages: MetadataRoute.Sitemap = [
+function getStaticPages(): MetadataRoute.Sitemap {
+  return [
     {
       url: SITE_URL,
       lastModified: new Date(),
@@ -70,6 +41,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       alternates: { languages: { 'id-ID': `${SITE_URL}/produk/ubi-supermarket`, 'en-US': `${SITE_URL}/produk/ubi-supermarket` } },
     },
   ]
+}
 
-  return [...staticPages, ...articleUrls]
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticPages = getStaticPages()
+
+  if (!process.env.DATABASE_URL) {
+    return staticPages
+  }
+
+  const prismaAny = prisma as any
+
+  try {
+    const translations = await prismaAny.articleTranslation.findMany({
+      where: {
+        article: { status: 'published' },
+      },
+      select: {
+        slug: true,
+        locale: true,
+        article: {
+          select: { updatedAt: true },
+        },
+      },
+    })
+
+    const articleUrls: MetadataRoute.Sitemap = translations.map((t: any) => ({
+      url: `${SITE_URL}/news/${t.slug}`,
+      lastModified: t.article.updatedAt,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          'id-ID': `${SITE_URL}/news/${t.slug}`,
+          'en-US': `${SITE_URL}/news/${t.slug}`,
+        },
+      },
+    }))
+
+    return [...staticPages, ...articleUrls]
+  } catch {
+    return staticPages
+  }
 }
