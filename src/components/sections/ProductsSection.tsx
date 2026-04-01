@@ -60,7 +60,7 @@ export function ProductsSection() {
           <p className="text-stone-600 text-lg">{t.desc}</p>
         </div>
 
-        <div className="relative -mx-6 md:-mx-12 group">
+        <div className="relative group">
           {error && products.length === 0 && (
             <div className="mb-4 mx-6 md:mx-12 rounded-2xl border border-orange-200 bg-orange-50 text-orange-800 px-5 py-4 text-sm font-medium text-center">
               {lang === 'en' ? 'Failed to load products from server. Showing backup catalog.' : 'Gagal memuat produk dari server. Menampilkan katalog cadangan.'}
@@ -70,7 +70,7 @@ export function ProductsSection() {
           <div 
             ref={carouselRef}
             onScroll={handleScroll}
-            className="hide-scrollbar flex gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory pt-4 pb-12 pl-[max(7.5vw,env(safe-area-inset-left))] pr-[max(7.5vw,env(safe-area-inset-right))] md:px-12"
+            className="hide-scrollbar flex gap-4 sm:gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory pt-4 pb-12 px-4 sm:px-6 md:px-12"
           >
             {!loading && products.length > 0 ? (
               products.map((p) => {
@@ -79,7 +79,7 @@ export function ProductsSection() {
                 return (
                   <div 
                     key={p.id} 
-                    className="shrink-0 w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] snap-center md:snap-start h-auto" 
+                    className="shrink-0 w-[84vw] sm:w-[72vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] max-w-full snap-center md:snap-start h-auto" 
                   >
                     <div className="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 group/card flex flex-col h-full">
                       <div className="h-64 overflow-hidden relative shrink-0">
@@ -113,7 +113,7 @@ export function ProductsSection() {
               })
             ) : (
               <>
-                <div className="shrink-0 w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] snap-center md:snap-start h-auto">
+                <div className="shrink-0 w-[84vw] sm:w-[72vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] max-w-full snap-center md:snap-start h-auto">
                   <div className="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 group/card flex flex-col h-full">
                     <div className="h-64 overflow-hidden relative shrink-0">
                       <div className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10">{t.badge1}</div>
@@ -135,7 +135,7 @@ export function ProductsSection() {
                     </div>
                   </div>
                 </div>
-                <div className="shrink-0 w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] snap-center md:snap-start h-auto">
+                <div className="shrink-0 w-[84vw] sm:w-[72vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] max-w-full snap-center md:snap-start h-auto">
                   <div className="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 group/card flex flex-col h-full">
                     <div className="h-64 overflow-hidden relative shrink-0">
                       <div className="absolute top-4 right-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">B2B</div>
@@ -157,7 +157,7 @@ export function ProductsSection() {
                     </div>
                   </div>
                 </div>
-                <div className="shrink-0 w-[85vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] snap-center md:snap-start h-auto">
+                <div className="shrink-0 w-[84vw] sm:w-[72vw] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] max-w-full snap-center md:snap-start h-auto">
                   <div className="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-100 group/card flex flex-col h-full">
                     <div className="h-64 overflow-hidden relative shrink-0">
                       <div className="absolute top-4 right-4 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">{t.badge3}</div>

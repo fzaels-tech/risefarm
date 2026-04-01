@@ -198,8 +198,8 @@ export function GallerySection() {
             />
           </div>
           
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl animate-scale opacity-0" style={{ animationDelay: '0.2s' }}>
-            <p className="text-white text-sm font-medium tracking-wide whitespace-nowrap">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 max-w-[92vw] px-6 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl animate-scale opacity-0" style={{ animationDelay: '0.2s' }}>
+            <p className="text-white text-sm font-medium tracking-wide text-center break-words">
               {displayImages.find(img => img.src === lightbox)?.caption || 'Dokumentasi RISEFARM'}
             </p>
           </div>

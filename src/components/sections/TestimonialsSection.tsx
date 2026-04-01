@@ -16,8 +16,8 @@ export function TestimonialsSection() {
         </div>
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <div className="fade-in-up">
-            <div className="bg-white p-10 rounded-3xl shadow-sm border border-emerald-100 relative h-full">
-              <div className="text-6xl text-orange-200 absolute top-6 right-8 font-serif">"</div>
+            <div className="bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-emerald-100 relative h-full">
+              <div className="text-5xl md:text-6xl text-orange-200 absolute top-4 md:top-6 right-5 md:right-8 font-serif">"</div>
               <p className="text-stone-600 text-lg italic mb-8 relative z-10 leading-relaxed">{t.t1}</p>
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-emerald-200 rounded-full overflow-hidden relative">
@@ -37,8 +37,8 @@ export function TestimonialsSection() {
             </div>
           </div>
           <div className="fade-in-up">
-            <div className="bg-white p-10 rounded-3xl shadow-sm border border-emerald-100 relative h-full">
-              <div className="text-6xl text-purple-200 absolute top-6 right-8 font-serif">"</div>
+            <div className="bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-emerald-100 relative h-full">
+              <div className="text-5xl md:text-6xl text-purple-200 absolute top-4 md:top-6 right-5 md:right-8 font-serif">"</div>
               <p className="text-stone-600 text-lg italic mb-8 relative z-10 leading-relaxed">{t.t2}</p>
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-purple-200 rounded-full overflow-hidden relative">

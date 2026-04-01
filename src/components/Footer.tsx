@@ -38,7 +38,7 @@ export function Footer() {
             <ul className="space-y-6">
               <li className="flex items-start gap-4">
                 <MapPin className="w-6 h-6 text-emerald-500 shrink-0 mt-0.5" />
-                <a href="https://maps.google.com/?q=Jl.+Parungkuda,+Kabupaten+Sukabumi,+Jawa+Barat+Indonesia" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">Jl. Parungkuda, Kabupaten Sukabumi, Jawa Barat Indonesia</a>
+                <a href="https://maps.google.com/?q=Jl.+Parungkuda,+Kabupaten+Sukabumi,+Jawa+Barat+Indonesia" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors break-words">Jl. Parungkuda, Kabupaten Sukabumi, Jawa Barat Indonesia</a>
               </li>
               <li className="flex items-center gap-4">
                 <Phone className="w-6 h-6 text-emerald-500 shrink-0" />
@@ -46,7 +46,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-4">
                 <Mail className="w-6 h-6 text-emerald-500 shrink-0" />
-                <a href="mailto:csrisefarm@gmail.com" className="hover:text-emerald-400 transition-colors">csrisefarm@gmail.com</a>
+                <a href="mailto:csrisefarm@gmail.com" className="hover:text-emerald-400 transition-colors break-all">csrisefarm@gmail.com</a>
               </li>
             </ul>
           </div>

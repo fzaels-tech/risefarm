@@ -23,7 +23,7 @@ export function ArticlesPreviewSection() {
             <h2 className="text-4xl md:text-5xl font-bold text-[#1C4A2E] mb-4">{t.title}</h2>
             <p className="text-stone-600 text-lg">{t.desc}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <Link href="/news" className="px-6 py-3 rounded-full border-[1.5px] border-[#1C4A2E]/25 text-[#1C4A2E] font-semibold hover:bg-[#4A7C59]/10 hover:border-[#4A7C59] transition-all">
               {t.viewAll}
             </Link>

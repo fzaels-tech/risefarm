@@ -18,7 +18,7 @@ export function WhySection() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="fade-in-up">
-            <div className="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full">
+            <div className="bg-emerald-800/50 p-6 md:p-8 rounded-2xl border border-emerald-700/50 h-full">
               <div className="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-orange-400">
                 <ShieldCheck className="w-7 h-7" />
               </div>
@@ -27,7 +27,7 @@ export function WhySection() {
             </div>
           </div>
           <div className="fade-in-up">
-            <div className="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full">
+            <div className="bg-emerald-800/50 p-6 md:p-8 rounded-2xl border border-emerald-700/50 h-full">
               <div className="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-emerald-400">
                 <Sprout className="w-7 h-7" />
               </div>
@@ -36,7 +36,7 @@ export function WhySection() {
             </div>
           </div>
           <div className="fade-in-up">
-            <div className="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full">
+            <div className="bg-emerald-800/50 p-6 md:p-8 rounded-2xl border border-emerald-700/50 h-full">
               <div className="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-purple-400">
                 <Tractor className="w-7 h-7" />
               </div>
@@ -45,7 +45,7 @@ export function WhySection() {
             </div>
           </div>
           <div className="fade-in-up">
-            <div className="bg-emerald-800/50 p-8 rounded-2xl border border-emerald-700/50 h-full">
+            <div className="bg-emerald-800/50 p-6 md:p-8 rounded-2xl border border-emerald-700/50 h-full">
               <div className="w-14 h-14 rounded-xl bg-emerald-950 flex items-center justify-center mb-6 text-blue-400">
                 <Users className="w-7 h-7" />
               </div>

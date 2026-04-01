@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       // Cloudinary — used for uploaded article/product/gallery images
       {
@@ -15,6 +16,8 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
+    // Keep generated image variants at practical quality levels.
+    qualities: [50, 60, 70, 75],
     // Aggressive browser-side cache: 7 days for optimized images
     minimumCacheTTL: 604800,
   },

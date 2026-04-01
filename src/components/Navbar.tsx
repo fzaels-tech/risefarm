@@ -42,7 +42,7 @@ export function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl rounded-full p-2 pl-4 transition-all duration-500 backdrop-blur-md border border-white/10 ${scrolled ? 'bg-[#1A1208]/85 shadow-2xl' : 'bg-[#1A1208]/40'} ${hidden ? '-translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
+      <nav className={`fixed top-[max(0.5rem,env(safe-area-inset-top))] md:top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-max(1rem,env(safe-area-inset-left)+env(safe-area-inset-right)))] sm:w-[95%] max-w-5xl rounded-full p-2 pl-3 sm:pl-4 transition-all duration-500 backdrop-blur-md border border-white/10 ${scrolled ? 'bg-[#1A1208]/85 shadow-2xl' : 'bg-[#1A1208]/40'} ${hidden ? '-translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
         <div className="flex justify-between items-center w-full">
           {/* Bagian Kiri (Logo & Nama Brand) */}
           <Link href="/" className="flex items-center gap-2.5 relative z-10 transition-transform hover:scale-105">
@@ -107,7 +107,7 @@ export function Navbar() {
 
             {/* Mobile Toggle - SUDAH BENAR (hilang saat lg:hidden) */}
             <button
-              className="lg:hidden text-white shrink-0 ml-1 mr-3 inline-flex h-12 w-12 items-center justify-center rounded-full hover:bg-white/10 active:scale-95 transition"
+              className="lg:hidden text-white shrink-0 ml-1 inline-flex h-12 w-12 items-center justify-center rounded-full hover:bg-white/10 active:scale-95 transition"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
             >
@@ -119,7 +119,7 @@ export function Navbar() {
 
       {/* Mobile Menu Dropdown - TIDAK DIUBAH */}
       {mobileMenuOpen && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-lg bg-[#1A1208]/95 backdrop-blur-xl border border-white/10 rounded-3xl p-6 lg:hidden flex flex-col gap-5 shadow-2xl">
+        <div className="fixed top-[max(5.5rem,calc(env(safe-area-inset-top)+4.75rem))] sm:top-24 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-max(1rem,env(safe-area-inset-left)+env(safe-area-inset-right)))] sm:w-[95%] max-w-lg bg-[#1A1208]/95 backdrop-blur-xl border border-white/10 rounded-3xl p-5 sm:p-6 lg:hidden flex flex-col gap-5 shadow-2xl">
           <Link href="/#about" onClick={() => setMobileMenuOpen(false)} className="text-white/90 font-medium text-lg hover:text-orange-500 transition-colors">{t.nav.about}</Link>
           <Link href="/#products" onClick={() => setMobileMenuOpen(false)} className="text-white/90 font-medium text-lg hover:text-orange-500 transition-colors">{t.nav.products}</Link>
           <Link href="/#process" onClick={() => setMobileMenuOpen(false)} className="text-white/90 font-medium text-lg hover:text-orange-500 transition-colors">{t.nav.process}</Link>
