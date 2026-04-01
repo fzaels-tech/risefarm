@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /editor/
-Disallow: /_next/
-
-# Sitemap
-Sitemap: https://risefarm.asia/sitemap.xml
