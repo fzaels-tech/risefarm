@@ -6,10 +6,12 @@ type JsonInit = {
 }
 
 export function apiSuccess<T>(data: T, init: JsonInit = {}) {
-  return NextResponse.json(data, {
-    status: init.status,
-    headers: init.headers,
-  })
+  const responseInit =
+    typeof init.status === 'number'
+      ? { status: init.status, headers: init.headers }
+      : { headers: init.headers }
+
+  return NextResponse.json(data, responseInit)
 }
 
 export function apiError(message: string, status = 500) {
