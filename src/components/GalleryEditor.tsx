@@ -258,7 +258,7 @@ export function GalleryEditor() {
 
                   <button
                     onClick={() => setDeleteConfirmId(img.id)}
-                    className="absolute top-2 right-2 sm:hidden bg-red-500/95 text-white p-2 rounded-full shadow-lg"
+                    className="absolute top-2 right-2 z-20 sm:hidden bg-red-500/95 text-white p-2 rounded-full shadow-lg"
                     title="Hapus Foto"
                     aria-label="Hapus Foto"
                   >
@@ -266,7 +266,7 @@ export function GalleryEditor() {
                   </button>
                   
                   {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-stone-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4">
+                  <div className="hidden sm:flex absolute inset-0 bg-stone-900/60 opacity-0 group-hover:opacity-100 transition-opacity items-center justify-center p-4">
                     <p className="text-white text-xs text-center line-clamp-2 mb-3 font-semibold">
                       {img.caption || 'Tanpa keterangan'}
                     </p>
