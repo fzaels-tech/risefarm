@@ -6,17 +6,12 @@ import { apiBadRequest, apiServerError, apiSuccess, apiUnauthorized } from '@/li
 
 const db = prisma as any
 
-// Gallery images rarely change — cache for 5 min, allow stale for 10 min.
-const GALLERY_CACHE_HEADERS = {
-  'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-}
-
 export async function GET() {
   try {
     const images = await db.galleryImage.findMany({
       orderBy: { createdAt: 'desc' }
     })
-    return apiSuccess(images, { headers: GALLERY_CACHE_HEADERS })
+    return apiSuccess(images, { headers: { 'Cache-Control': 'no-store' } })
   } catch (error) {
     console.error('Failed to fetch gallery images:', error)
     return apiServerError('Failed to fetch gallery images')

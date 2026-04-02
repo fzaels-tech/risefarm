@@ -25,7 +25,7 @@ export function GallerySection() {
   const [showFull, setShowFull] = useState(false)
   const [lightbox, setLightbox] = useState<string | null>(null)
 
-  const { data: galleryData } = useFetch<any[]>('/api/gallery')
+  const { data: galleryData } = useFetch<any[]>('/api/gallery', { staleTime: 0 })
 
   const displayImages = Array.isArray(galleryData) && galleryData.length > 0
     ? [
