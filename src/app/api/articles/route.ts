@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { slugify } from '@/lib/slugify'
 import { verifyToken } from '@/lib/auth'
 import { cookies } from 'next/headers'
 import { getArticlesByLocaleWithFallback, getAllArticlesForAdmin } from '@/lib/article-i18n'
 import { revalidatePath } from 'next/cache'
+import { apiBadRequest, apiServerError, apiSuccess, apiUnauthorized } from '@/lib/api-response'
 
 // Articles change more often, 1 min fresh, 2 min stale
 const ARTICLES_CACHE_HEADERS = {
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       const filtered = category
         ? allArticles.filter((article) => article.category === category)
         : allArticles
-      return NextResponse.json(filtered, {
+      return apiSuccess(filtered, {
         headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate' }
       })
     }
@@ -42,9 +42,9 @@ export async function GET(request: Request) {
       ? localizedArticles.filter((article) => article.category === category)
       : localizedArticles
     
-    return NextResponse.json(articles, { headers: ARTICLES_CACHE_HEADERS })
+    return apiSuccess(articles, { headers: ARTICLES_CACHE_HEADERS })
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch articles' }, { status: 500 })
+    return apiServerError('Failed to fetch articles')
   }
 }
 
@@ -52,10 +52,10 @@ export async function POST(request: Request) {
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get('risefarm_token')?.value
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!token) return apiUnauthorized()
     
     const payload = await verifyToken(token)
-    if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!payload) return apiUnauthorized()
 
     const data = await request.json()
     const prismaAny = prisma as any
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
     }
 
     if (translationsToCreate.length === 0) {
-      return NextResponse.json({ error: 'At least one language title is required' }, { status: 400 })
+      return apiBadRequest('At least one language title is required')
     }
 
     const article = await prismaAny.article.create({
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
     revalidatePath('/', 'layout')
     revalidatePath('/news', 'page')
 
-    return NextResponse.json(
+    return apiSuccess(
       {
         id: article.id,
         category: article.category,
@@ -126,7 +126,7 @@ export async function POST(request: Request) {
     )
   } catch (error: any) {
     console.error(error)
-    return NextResponse.json({ error: 'Failed to create article' }, { status: 500 })
+    return apiServerError('Failed to create article')
   }
 }
 

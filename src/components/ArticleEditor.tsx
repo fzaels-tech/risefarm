@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { CheckCircle2, CloudUpload, Loader2, X, AlertCircle } from 'lucide-react'
 import Image from 'next/image'
+import { prepareImageForUpload } from '@/lib/prepare-image-upload'
 
 type LangTab = 'id' | 'en'
 
@@ -128,8 +129,9 @@ export function ArticleEditor({ initialArticles }: { initialArticles: any[] }) {
   const handleImageUpload = async (file: File) => {
     setUploadingImage(true)
     try {
+      const processedFile = await prepareImageForUpload(file)
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', processedFile)
       const res = await fetch('/api/upload-image', { method: 'POST', body: formData })
       const data = await res.json()
       if (!res.ok) { showToast(data.error || 'Gagal upload gambar', 'error'); return }
@@ -238,7 +240,17 @@ export function ArticleEditor({ initialArticles }: { initialArticles: any[] }) {
                     <label className={`inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold cursor-pointer transition-colors ${uploadingImage ? 'bg-stone-200 text-stone-600' : 'bg-stone-900 text-white hover:bg-stone-800'}`}>
                       {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : <CloudUpload className="w-5 h-5" />}
                       {uploadingImage ? 'Mengupload...' : 'Upload Photo'}
-                      <input type="file" accept="image/*" className="hidden" disabled={uploadingImage} onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); e.currentTarget.value = '' }} />
+                      <input
+                        type="file"
+                        accept="image/*,.heic,.heif"
+                        className="sr-only"
+                        disabled={uploadingImage}
+                        onChange={(e) => {
+                          const f = e.target.files?.[0]
+                          if (f) handleImageUpload(f)
+                          e.currentTarget.value = ''
+                        }}
+                      />
                     </label>
                     <div className="text-xs text-stone-500">Pilih file gambar untuk cover artikel.</div>
                   </div>

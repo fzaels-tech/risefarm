@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
 import { cookies } from 'next/headers'
 import { slugify } from '@/lib/slugify'
 import { revalidatePath } from 'next/cache'
+import { apiNotFound, apiServerError, apiSuccess, apiUnauthorized } from '@/lib/api-response'
 
 export async function GET(
   request: Request,
@@ -29,7 +29,7 @@ export async function GET(
     })
     
     if (!article) {
-      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+      return apiNotFound('Article not found')
     }
     
     const localized =
@@ -37,10 +37,10 @@ export async function GET(
       article.translations.find((t: any) => t.locale === 'id')
 
     if (!localized) {
-      return NextResponse.json({ error: 'Article translation not found' }, { status: 404 })
+      return apiNotFound('Article translation not found')
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       id: article.id,
       category: article.category,
       author: article.author,
@@ -56,7 +56,7 @@ export async function GET(
       content: localized.content,
     })
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch article' }, { status: 500 })
+    return apiServerError('Failed to fetch article')
   }
 }
 
@@ -67,10 +67,10 @@ export async function PUT(
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get('risefarm_token')?.value
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!token) return apiUnauthorized()
     
     const payload = await verifyToken(token)
-    if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!payload) return apiUnauthorized()
 
     const prismaAny = prisma as any
     const { id } = await params
@@ -136,7 +136,7 @@ export async function PUT(
     revalidatePath('/news', 'page')
     revalidatePath(`/news/${idTranslation?.slug || ''}`, 'page')
 
-    return NextResponse.json({
+    return apiSuccess({
       id: article.id,
       category: article.category,
       author: article.author,
@@ -154,7 +154,7 @@ export async function PUT(
     })
   } catch (error) {
     console.error(error)
-    return NextResponse.json({ error: 'Failed to update article' }, { status: 500 })
+    return apiServerError('Failed to update article')
   }
 }
 
@@ -166,18 +166,18 @@ export async function DELETE(
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get('risefarm_token')?.value
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!token) return apiUnauthorized()
     
     const payload = await verifyToken(token)
-    if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!payload) return apiUnauthorized()
 
     const { id } = await params
     await prisma.article.delete({
       where: { id }
     })
 
-    return NextResponse.json({ success: true })
+    return apiSuccess({ success: true })
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 })
+    return apiServerError('Failed to delete article')
   }
 }

@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import crypto from 'crypto'
 import { verifyToken } from '@/lib/auth'
+import { apiBadRequest, apiError, apiServerError, apiSuccess, apiUnauthorized } from '@/lib/api-response'
 
 export const runtime = 'nodejs'
 
@@ -11,12 +11,12 @@ export async function POST(request: Request) {
     const token = cookieStore.get('risefarm_token')?.value
 
     if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return apiUnauthorized()
     }
 
     const payload = await verifyToken(token)
     if (!payload) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return apiUnauthorized()
     }
 
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME
@@ -24,14 +24,18 @@ export async function POST(request: Request) {
     const apiSecret = process.env.CLOUDINARY_API_SECRET
 
     if (!cloudName || !apiKey || !apiSecret) {
-      return NextResponse.json({ error: 'Cloudinary env is not configured' }, { status: 500 })
+      return apiServerError('Cloudinary env is not configured')
     }
 
     const formData = await request.formData()
     const file = formData.get('file')
 
     if (!(file instanceof File)) {
-      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
+      return apiBadRequest('No file uploaded')
+    }
+
+    if (!file.type.startsWith('image/')) {
+      return apiBadRequest('Only image files are allowed')
     }
 
     const timestamp = Math.floor(Date.now() / 1000)
@@ -53,18 +57,15 @@ export async function POST(request: Request) {
 
     const uploadData = await uploadRes.json()
     if (!uploadRes.ok) {
-      return NextResponse.json(
-        { error: uploadData?.error?.message || 'Failed to upload image' },
-        { status: 400 }
-      )
+      return apiError(uploadData?.error?.message || 'Failed to upload image', 400)
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       url: uploadData.secure_url,
       publicId: uploadData.public_id,
     })
   } catch (error) {
     console.error(error)
-    return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 })
+    return apiServerError('Failed to upload image')
   }
 }

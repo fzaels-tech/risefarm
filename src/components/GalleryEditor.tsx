@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { CloudUpload, Loader2, CheckCircle2, AlertCircle, X, Image as ImageIcon } from 'lucide-react'
 import Image from 'next/image'
+import { prepareImageForUpload } from '@/lib/prepare-image-upload'
 
 export function GalleryEditor() {
   const [uploadingImage, setUploadingImage] = useState(false)
@@ -42,8 +43,9 @@ export function GalleryEditor() {
   const handleImageUpload = async (file: File) => {
     setUploadingImage(true)
     try {
+      const processedFile = await prepareImageForUpload(file)
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', processedFile)
 
       const res = await fetch('/api/upload-image', {
         method: 'POST',
@@ -204,8 +206,8 @@ export function GalleryEditor() {
                       {uploadingImage ? 'Mengupload...' : 'Pilih Foto'}
                       <input
                         type="file"
-                        accept="image/*"
-                        className="hidden"
+                        accept="image/*,.heic,.heif"
+                        className="sr-only"
                         disabled={uploadingImage}
                         onChange={(e) => {
                           const selected = e.target.files?.[0]

@@ -1,19 +1,19 @@
-import { NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/auth'
 import { cookies } from 'next/headers'
+import { apiError, apiSuccess } from '@/lib/api-response'
 
 export async function GET() {
   const cookieStore = await cookies()
   const token = cookieStore.get('risefarm_token')?.value
   
   if (!token) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
+    return apiError('Unauthorized', 401)
   }
   
   const payload = await verifyToken(token)
   if (!payload) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
+    return apiError('Unauthorized', 401)
   }
   
-  return NextResponse.json({ authenticated: true, user: { username: payload.username } })
+  return apiSuccess({ authenticated: true, user: { username: payload.username } })
 }

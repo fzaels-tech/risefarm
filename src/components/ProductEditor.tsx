@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { CloudUpload, Loader2, CheckCircle2, AlertCircle, X, Package, Trash2, Edit2, Plus } from 'lucide-react'
 import Image from 'next/image'
+import { prepareImageForUpload } from '@/lib/prepare-image-upload'
 
 type ProductTranslation = {
   locale: 'id' | 'en'
@@ -76,8 +77,9 @@ export function ProductEditor() {
   const handleImageUpload = async (file: File) => {
     setUploadingImage(true)
     try {
+      const processedFile = await prepareImageForUpload(file)
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', processedFile)
 
       const res = await fetch('/api/upload-image', {
         method: 'POST',
@@ -256,9 +258,17 @@ export function ProductEditor() {
                         <p className="text-sm font-semibold text-emerald-950 mb-4">Upload Gambar</p>
                         <label className={`inline-flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-sm font-semibold cursor-pointer ${uploadingImage ? 'bg-stone-200' : 'bg-emerald-700 text-white hover:bg-emerald-800'}`}>
                           {uploadingImage ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Pilih File'}
-                          <input type="file" accept="image/*" className="hidden" disabled={uploadingImage} onChange={(e) => {
-                            if (e.target.files?.[0]) handleImageUpload(e.target.files[0])
-                          }} />
+                          <input
+                            type="file"
+                            accept="image/*,.heic,.heif"
+                            className="sr-only"
+                            disabled={uploadingImage}
+                            onChange={(e) => {
+                              const selected = e.target.files?.[0]
+                              if (selected) handleImageUpload(selected)
+                              e.currentTarget.value = ''
+                            }}
+                          />
                         </label>
                       </div>
                     )}

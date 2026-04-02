@@ -1,6 +1,8 @@
-import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
+import { verifyToken } from '@/lib/auth'
+import { cookies } from 'next/headers'
+import { apiBadRequest, apiServerError, apiSuccess, apiUnauthorized } from '@/lib/api-response'
 
 // Cache strategy: products change rarely (admin-driven).
 // s-maxage=300 → CDN/server cache fresh for 5 minutes.
@@ -104,16 +106,43 @@ export async function GET(req: Request) {
       orderBy: { createdAt: 'desc' },
     })
 
-    return NextResponse.json(products, { headers: isAdmin ? PRODUCTS_ADMIN_HEADERS : PRODUCTS_CACHE_HEADERS })
+    return apiSuccess(products, { headers: isAdmin ? PRODUCTS_ADMIN_HEADERS : PRODUCTS_CACHE_HEADERS })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return apiServerError(error.message)
   }
 }
 
 export async function POST(req: Request) {
   try {
+    const cookieStore = await cookies()
+    const token = cookieStore.get('risefarm_token')?.value
+    if (!token) {
+      return apiUnauthorized()
+    }
+
+    const payload = await verifyToken(token)
+    if (!payload) {
+      return apiUnauthorized()
+    }
+
     const data = await req.json()
     const { image, badgeColor, link, translations } = data
+
+    if (!image || typeof image !== 'string') {
+      return apiBadRequest('Image is required')
+    }
+
+    if (!Array.isArray(translations) || translations.length === 0) {
+      return apiBadRequest('Translations are required')
+    }
+
+    const hasInvalidTranslation = translations.some(
+      (t: any) => !t || !t.locale || !t.title || typeof t.title !== 'string'
+    )
+    if (hasInvalidTranslation) {
+      return apiBadRequest('Invalid translations payload')
+    }
+
     const targetBadgeColor = badgeColor || 'emerald'
 
     const product = await prisma.product.create({
@@ -137,8 +166,8 @@ export async function POST(req: Request) {
     revalidatePath('/', 'layout')
     revalidatePath('/editor/products')
 
-    return NextResponse.json(product)
+    return apiSuccess(product)
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return apiServerError(error.message)
   }
 }

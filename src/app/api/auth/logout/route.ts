@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import { serialize } from 'cookie'
+import { apiSuccess } from '@/lib/api-response'
 
 export async function POST() {
   const cookieHeader = serialize('risefarm_token', '', {
@@ -10,7 +10,7 @@ export async function POST() {
     sameSite: 'lax',
   })
   
-  const response = NextResponse.json({ success: true })
+  const response = apiSuccess({ success: true })
   response.headers.append('Set-Cookie', cookieHeader)
   return response
 }
