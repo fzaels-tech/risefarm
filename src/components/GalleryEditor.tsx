@@ -15,6 +15,7 @@ export function GalleryEditor() {
   const [loadingImages, setLoadingImages] = useState(true)
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [pendingDeleteCount, setPendingDeleteCount] = useState(0)
 
   const fetchImages = async () => {
     try {
@@ -116,7 +117,13 @@ export function GalleryEditor() {
   }
 
   const handleDelete = async (id: string) => {
+    const previousImages = images
+
+    // Optimistic update: remove from UI first so deletion feels instant.
+    setImages((prev) => prev.filter((img) => img.id !== id))
+    setDeleteConfirmId(null)
     setIsDeleting(true)
+    setPendingDeleteCount((prev) => prev + 1)
     try {
       const res = await fetch(`/api/gallery/${id}`, {
         method: 'DELETE',
@@ -124,12 +131,13 @@ export function GalleryEditor() {
       if (!res.ok) throw new Error('Gagal menghapus gambar')
       
       showToast("Foto berhasil dihapus!", "success")
-      setDeleteConfirmId(null)
-      fetchImages()
     } catch (error) {
       console.error(error)
+      // Rollback if backend deletion fails.
+      setImages(previousImages)
       showToast("Gagal menghapus foto", "error")
     } finally {
+      setPendingDeleteCount((prev) => Math.max(0, prev - 1))
       setIsDeleting(false)
     }
   }
@@ -147,6 +155,15 @@ export function GalleryEditor() {
             <button onClick={() => setToast(null)} className="ml-2 hover:opacity-70 transition-opacity p-1">
               <X className="w-4 h-4" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {pendingDeleteCount > 0 && (
+        <div className="fixed top-24 left-5 sm:left-10 z-[95] animate-in slide-in-from-top-4 fade-in duration-300 pointer-events-none">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl shadow-md border bg-amber-50 border-amber-200 text-amber-900">
+            <Loader2 className="w-4 h-4 animate-spin text-amber-700" />
+            <span className="text-sm font-semibold">Menghapus foto di server...</span>
           </div>
         </div>
       )}
