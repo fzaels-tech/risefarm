@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CloudUpload, Loader2, CheckCircle2, AlertCircle, X, Image as ImageIcon } from 'lucide-react'
 import Image from 'next/image'
 import { prepareImageForUpload } from '@/lib/prepare-image-upload'
@@ -16,6 +16,7 @@ export function GalleryEditor() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [pendingDeleteCount, setPendingDeleteCount] = useState(0)
+  const [isSaving, setIsSaving] = useState(false)
 
   const fetchImages = async () => {
     try {
@@ -31,10 +32,9 @@ export function GalleryEditor() {
     }
   }
 
-  // Fetch immediately on mount
-  useState(() => {
+  useEffect(() => {
     fetchImages()
-  })
+  }, [])
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type })
@@ -45,10 +45,22 @@ export function GalleryEditor() {
     setUploadingImage(true)
     try {
       const processedFile = await prepareImageForUpload(file)
+
+      const signRes = await fetch('/api/upload-image?folder=risefarm/gallery')
+      const signData = await signRes.json().catch(() => ({}))
+      if (!signRes.ok) {
+        showToast(signData.error || 'Gagal menyiapkan upload gambar', 'error')
+        return
+      }
+
       const formData = new FormData()
       formData.append('file', processedFile)
+      formData.append('api_key', signData.apiKey)
+      formData.append('timestamp', String(signData.timestamp))
+      formData.append('folder', signData.folder)
+      formData.append('signature', signData.signature)
 
-      const res = await fetch('/api/upload-image', {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`, {
         method: 'POST',
         body: formData,
       })
@@ -59,7 +71,7 @@ export function GalleryEditor() {
         return
       }
 
-      setImageUrl(data.url)
+      setImageUrl(data.secure_url)
       showToast('Foto dokumentasi berhasil diunggah', 'success')
     } catch (error) {
       console.error(error)
@@ -74,7 +86,17 @@ export function GalleryEditor() {
         showToast("Mohon upload foto terlebih dahulu!", "error")
         return
     }
-    
+
+    const optimisticId = `temp-${Date.now()}`
+    const optimisticImage = {
+      id: optimisticId,
+      url: imageUrl,
+      caption: caption || '',
+    }
+
+    setIsSaving(true)
+    setImages((prev) => [optimisticImage, ...prev])
+
     try {
       const res = await fetch('/api/gallery', {
         method: 'POST',
@@ -85,13 +107,17 @@ export function GalleryEditor() {
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'Gagal menyimpan')
 
+      setImages((prev) => prev.map((img) => (img.id === optimisticId ? data : img)))
+
       showToast("Berhasil ditambahkan ke Dokumentasi!", "success")
       setImageUrl("")
       setCaption("")
-      fetchImages() // Refresh the list
     } catch (error) {
       console.error(error)
+      setImages((prev) => prev.filter((img) => img.id !== optimisticId))
       showToast(error instanceof Error ? error.message : "Gagal menyimpan ke database", "error")
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -178,8 +204,13 @@ export function GalleryEditor() {
                 Tambahkan Foto
               </h1>
             </div>
-            <button onClick={handleSave} className="px-6 py-3 rounded-2xl bg-emerald-700 text-white font-bold hover:bg-emerald-800 transition-colors shadow-md">
-              Simpan Dokumentasi
+            <button
+              onClick={handleSave}
+              disabled={isSaving || uploadingImage || !imageUrl}
+              className="px-6 py-3 rounded-2xl bg-emerald-700 text-white font-bold hover:bg-emerald-800 disabled:opacity-60 disabled:cursor-not-allowed transition-colors shadow-md flex items-center justify-center gap-2"
+            >
+              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              {isSaving ? 'Menyimpan...' : 'Simpan Dokumentasi'}
             </button>
           </div>
 
