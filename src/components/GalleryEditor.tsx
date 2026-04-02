@@ -255,6 +255,15 @@ export function GalleryEditor() {
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="w-full h-full object-cover"
                   />
+
+                  <button
+                    onClick={() => setDeleteConfirmId(img.id)}
+                    className="absolute top-2 right-2 sm:hidden bg-red-500/95 text-white p-2 rounded-full shadow-lg"
+                    title="Hapus Foto"
+                    aria-label="Hapus Foto"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                   
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-stone-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4">
